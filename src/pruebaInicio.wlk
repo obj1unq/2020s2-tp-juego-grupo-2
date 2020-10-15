@@ -11,8 +11,7 @@ object tutorial {
 
 object jugador {
 
-	var property position = camino.partida().position()
-
+	var property position = camino.partida().siguiente().position()
 	method image() {
 		return "jugador.png"
 	}
