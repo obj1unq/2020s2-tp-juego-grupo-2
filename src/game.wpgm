@@ -1,8 +1,17 @@
 import wollok.game.*
-import pepita.*
+import pruebaInicio.*
+import camino.*
 
 program game {
 	game.title("Juego Base")
-	game.addVisual(pepita)
+	game.height(40)//20
+	game.width(30)//15
+	game.cellSize(30)//50
+	game.boardGround("tablero.jpg")
+	
+	tutorial.iniciar()
+	
+	game.showAttributes(jugador)//debug
+	
 	game.start()
 }
