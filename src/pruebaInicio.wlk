@@ -1,9 +1,12 @@
 import wollok.game.*
 import camino.*
+import configuracion.*
+
 
 object tutorial {
 	method iniciar(){
-		config.configurarTeclas()
+		configurar.tablero()
+		configurar.teclas()
 		game.addVisual(jugador)
 	}
 }
@@ -20,15 +23,4 @@ object jugador {
 		position = unaPosicion
 	}
 
-}
-
-object config {
-
-	method configurarTeclas() {
-		keyboard.left().onPressDo({ jugador.moverA(jugador.position().left(1)) })
-		keyboard.right().onPressDo({ jugador.moverA(jugador.position().right(1)) })
-		keyboard.up().onPressDo({ jugador.moverA(jugador.position().up(1)) })
-		keyboard.down().onPressDo({jugador.moverA(jugador.position().down(1)) })
-		keyboard.c().onPressDo({ game.say(jugador, jugador.position().toString()) })
-	}
 }
