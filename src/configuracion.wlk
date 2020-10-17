@@ -26,6 +26,7 @@ object configurar {
 		keyboard.num4().onPressDo({ miniGameManager.keyLeft() })
 		keyboard.num6().onPressDo({ miniGameManager.keyRight() })
 		keyboard.s().onPressDo({ miniGameManager.load(miniGameFactory.ppt()) miniGameManager.start() })	
+		keyboard.d().onPressDo({ miniGameManager.load(miniGameFactory.pyr()) miniGameManager.start() })	
 	}
 	
 }
