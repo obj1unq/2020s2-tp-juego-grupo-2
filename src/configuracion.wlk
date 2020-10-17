@@ -1,6 +1,8 @@
 import wollok.game.*
 import eventos.*
 import pruebaInicio.*
+import sistemaDeTurnos.*
+import personajes.*
 
 object configurar {
 
