@@ -10,7 +10,7 @@ object configurar {
 		game.height(40)//20
 		game.width(30)//15
 		game.cellSize(30)//50
-		game.boardGround("tablero.jpg")
+		game.boardGround("tablero_01.jpg")
 	}
 
 	method teclas() {
