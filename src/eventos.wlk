@@ -52,12 +52,17 @@ object miniGameFactory{
 		const _pregunta = new Pregunta (image = "preguntaTest.png", valorRespuestas = [false, false, true])
 		return new PYR( pregunta = _pregunta, image = _pregunta.image()  )
 	}
+	
+	method escape(){
+		return new CorreBondi()		
+	}
 }
 
 /*-----------------------------------------------------------------------------------------------------------
 	 									Relator 
 -------------------------------------------------------------------------------------------------------------*/
 
+// Visualizar los mensajes de los minijuegos.
 object relator {
 	const property position = game.at(22,26)
 	const property image = "pepita.png"
@@ -71,60 +76,72 @@ object relator {
 	 									Selectores 
 -------------------------------------------------------------------------------------------------------------*/
 
-object selector1x1{
+// Selector de 1 celda x 1 celda
+
+class Selector1x1{
 	var property image = "p1.png"
 	var property position = game.at(-10,-10)
+	var activo = false
+	
+	method on(){ activo = true }
+	method off(){ activo = false }	
+	
+	method isOn(){ return activo }
 }
 
 /*-----------------------------------------------------------------------------------------------------------
-	 									Piedra Papel o tijera! 
+	 									Super clase mini juego
 -------------------------------------------------------------------------------------------------------------*/
-
-class PPT {
-	const property image = "miniTest.png"
+class Minijuego {
 	const property position = game.at(5,10)
 	const x = self.position().x()
 	const y = self.position().y()
-	
-	const opcionesJ = [opcionesFactory.piedra(), opcionesFactory.papel(), opcionesFactory.tijera()]
-	const opcionesM = [opcionesFactory.piedra(), opcionesFactory.papel(), opcionesFactory.tijera()]
-	var selectorActivo = false
 
-	const selector = selector1x1
+	method keyUp(){ /*Sin uso*/	}
+	method keyDown(){ /*Sin uso*/	}
+	method keyLeft(){ /*Sin uso*/	}
+	method keyRight(){ /*Sin uso*/	}
+
+}
+
+/*-----------------------------------------------------------------------------------------------------------
+	 									Piedra Papel o tijera
+-------------------------------------------------------------------------------------------------------------*/
+
+//Muestra tres opciones en pantalla y 
+
+class PPT inherits Minijuego{
+	const property image = "miniTest.png"
+	
+	const selector = new Selector1x1()
 	const posicionesSelector = [game.at(x + 2, y + 5), game.at(x + 8, y + 5), game.at(x + 15, y + 5)]
 	var indexSelector = 0
 	
+	const opcionesJ = [opcionesFactory.piedra(), opcionesFactory.papel(), opcionesFactory.tijera()]
+	const opcionesM = [opcionesFactory.piedra(), opcionesFactory.papel(), opcionesFactory.tijera()]
 	var eleccionMaquina = null
 	var eleccionJugador = null
-
-	method selectorOn(){ selectorActivo = true }
-
-	method selectorOff(){ selectorActivo = false }
-
-	method elegirAlAzar(){
+		
+	method elegirMaquina(){
 		return opcionesM.get((0 .. 2).anyOne())
 	}
 
-	method keyLeft(){
-		if (selectorActivo) {
+	override method keyLeft(){
+		if (selector.isOn()) {
 			self.posicionSelector(-1)
 		}
 	}
 
-	method keyRight(){
-		if (selectorActivo) {
+	override method keyRight(){
+		if (selector.isOn()) {
 			self.posicionSelector(1)
 		}
 	}
-	method keyUp(){ /*Sin uso*/	}
-	method keyDown(){ /*Sin uso*/	}
+
 	
 	method posicionSelector(movimientoX){
-		if (indexSelector == 0 and movimientoX < 0) {
-			indexSelector = 2
-		} else {
 		indexSelector = ( indexSelector + movimientoX ) % 3
-		}
+		if (indexSelector < 0) { indexSelector = 2 } 
 		selector.position(posicionesSelector.get(indexSelector))
 	}
 	
@@ -132,7 +149,7 @@ class PPT {
 		game.removeVisual(eleccionMaquina)	
 		game.removeVisual(eleccionJugador)
 		game.schedule(5000, { 	self.timeOut()  } )
-		self.selectorOn()
+		selector.on()
 	}
 	
 	method procesarResultado(resultado){
@@ -155,12 +172,12 @@ class PPT {
 		selector.position(posicionesSelector.get(indexSelector))	
 		game.addVisual(selector)
 		game.schedule(5000, { self.timeOut() })
-		self.selectorOn()
+		selector.on()
 	}
 
 	method timeOut(){
-		self.selectorOff()
-		eleccionMaquina = self.elegirAlAzar()
+		selector.off()
+		eleccionMaquina = self.elegirMaquina()
 		eleccionJugador = opcionesJ.get(indexSelector)
 		game.schedule( 1000, { game.addVisualIn(eleccionMaquina, game.at(x + 8, y + 13)) 
 							   game.addVisualIn(eleccionJugador, game.at(x + 8, y + 9)) })
@@ -182,14 +199,10 @@ class Piedra{
 	
 	method compararCon(opcion){
 		return 
-		if (opcion.valor() == 3){
-			1 //gana
-		} else if (opcion.valor() == 2){
-			2 //pierde
-			} else {
-			3 //empata
-			}
-		}
+			if (opcion.valor() == 3){ 1 } //gana 
+			else if (opcion.valor() == 2){ 2 } //pierde  
+				else {	3 } //empata
+	 }
 }
 
 class Papel{
@@ -199,13 +212,9 @@ class Papel{
 	
 	method compararCon(opcion){
 		return 
-		if (opcion.valor() == 1){
-			1 //gana
-		} else if (opcion.valor() == 3){
-			2 //pierde
-			} else {
-			3 //empata
-			}
+			if (opcion.valor() == 1){ 1 } //gana
+			else if (opcion.valor() == 3){ 2 } //pierde 
+				else { 3 } //empata
 		}
 }
 
@@ -216,74 +225,46 @@ class Tijera{
 	
 	method compararCon(opcion){
 		return 
-		if (opcion.valor() == 2){
-			1 //gana
-		} else if (opcion.valor() == 1){
-			2 //pierde
-			} else {
-			3 //empata
-			}
-		}
+			if (opcion.valor() == 2){ 1 } //gana 
+				else if (opcion.valor() == 1){ 2 } //pierde
+					else { 3 } //empata
+	}
 }
 
 object opcionesFactory{
 	
-	method piedra(){
-		return new Piedra()
-	}
-	method papel(){
-		return new Papel()
-	}
-	method tijera(){
-		return new Tijera()
-	}
+	method piedra(){ return new Piedra() }
+	method papel(){ return new Papel()	}
+	method tijera(){ return new Tijera() }
 }
 
 
 /*-----------------------------------------------------------------------------------------------------------
 	 									Preguntas y respuestas
 -------------------------------------------------------------------------------------------------------------*/
-class PYR {
+class PYR inherits Minijuego{
+	const property image = "preguntaTest.png"
+	
 	const pregunta = null
-	const property image = null
-	const property position = game.at(5,10)
-	const x = self.position().x()
-	const y = self.position().y()
 
-	var selectorActivo = false
-
-	const selector = selector1x1
+	const selector = new Selector1x1()
 	const posicionesRespuestas = [game.at(x + 3,y + 10), game.at(x + 3,y + 12), game.at(x + 3,y + 14)]
 	var indexSelector = 0
 	
-	method selectorOn(){ selectorActivo = true	}
-
-	method selectorOff(){ selectorActivo = false }
-
-	method keyLeft(){ /*Sin uso*/	}
-	method keyRight(){ /*Sin uso*/ }
-	method keyUp(){
-		if (selectorActivo) {
-			self.posicionSelector(1)
-		}
+	override method keyUp(){
+		if (selector.isOn()) { self.posicionSelector(1) }
 	}
-	method keyDown(){
-		if (selectorActivo) {
-			self.posicionSelector(-1)
-		}
+	override method keyDown(){
+		if (selector.isOn()) { self.posicionSelector(-1) }
 	}
 	
 	method posicionSelector(movimientoX){
-		if (indexSelector == 0 and movimientoX < 0) {
-			indexSelector = 2
-		} else {
 		indexSelector = ( indexSelector + movimientoX ) % 3
-		}
+		if (indexSelector < 0) { indexSelector = 2 } 
 		selector.position(posicionesRespuestas.get(indexSelector))
 	}
 	
 	method procesarResultado(valorRespuestaElegida){
-
 		if (valorRespuestaElegida){
 			relator.decir("Es correcto") //le aviso al tablero que gano jugador
 			game.schedule( 3000, { miniGameManager.clear() } )
@@ -296,12 +277,12 @@ class PYR {
 	method start(){
 		selector.position(posicionesRespuestas.get(indexSelector))	
 		game.addVisual(selector)
-		self.selectorOn()
+		selector.on()
 		game.schedule(5000, {	self.timeOut()  } )
 	}
 
 	method timeOut(){
-		self.selectorOff()
+		selector.off()
 		self.procesarResultado( pregunta.valorRespuestas().get(indexSelector) )
 	}
 
@@ -319,5 +300,134 @@ class Pregunta {
 	const property valorRespuestas = []
 }
 /*-----------------------------------------------------------------------------------------------------------
-	 									|
+	 									Se va el bondi
 -------------------------------------------------------------------------------------------------------------*/
+class CorreBondi inherits Minijuego{
+	const property image = "escapetest.png"
+	
+	const bondi = new Bondi()
+	
+	const personaje = new PersonajeBondi(position = game.at(x + 9,y + 1))
+	var personajeActivo = false
+
+	const filas = new FilasHorizontal()
+	const posicionesFilasY = [y + 4, y + 8, y + 12]
+
+	var posicionPersonas = #{}
+	
+	method movimientoOn(){ personajeActivo = true	}
+	method movimientoOff(){ personajeActivo = false }
+
+	method esPosicionValida(posicion){
+		return posicion.x().between(x, x + 19) and posicion.y().between(y, y + 17) and not posicionPersonas.contains(posicion)
+	}
+
+	method puedeIrA( posicion ){
+		return personajeActivo and self.esPosicionValida( posicion )
+	}
+
+	override method keyLeft(){
+		if (self.puedeIrA(personaje.position().left(1))) {
+			personaje.position(personaje.position().left(1))
+		}
+	}
+	override method keyRight(){
+		if (self.puedeIrA(personaje.position().right(1))) {
+			personaje.position(personaje.position().right(1))
+		}
+	}
+	override method keyUp(){
+		if (self.puedeIrA(personaje.position().up(1))) {
+			personaje.position(personaje.position().up(1))
+		}
+	}
+	override method keyDown(){
+		if (self.puedeIrA(personaje.position().down(1))) {
+			personaje.position(personaje.position().down(1))
+		}
+	}
+	
+	// Arma las filas tomado la posicion de posicionesFilasY y le asigna una hueco en una posicion al azar (entre 6 y 13)
+	// La ultima fila no esta en la lista ya que tiene el hueco en un posicion fija.
+	method armarFilas(){
+		posicionesFilasY.forEach( { posicionY => filas.armarFila(20, (6 .. 13).anyOne() , game.at(x, posicionY)) } )
+		filas.armarFila(20, 10 , game.at(x, y +  16))
+	}
+
+	method estaEnLaMeta(_personaje){
+		return _personaje.position().y() >= y + 17
+	}
+
+	method procesarResultado(){
+		if (self.estaEnLaMeta(personaje)){
+			relator.decir("Ganaste") //le aviso al tablero que gano jugador
+			game.schedule( 3000, { miniGameManager.clear() } )
+		} else { 
+			relator.decir("Perdiste")	//le aviso al tablero que perdio jugador
+			game.schedule( 3000, { miniGameManager.clear() } )
+		}
+	}
+	
+	method start(){
+		self.armarFilas()
+		posicionPersonas = filas.posicionPersonas()
+		bondi.position(game.at(x + 8, y +  17))
+		game.addVisual(bondi)
+		game.addVisual(personaje)
+		self.movimientoOn()
+		game.schedule(5000, {	self.timeOut()  } )
+	}
+
+	method timeOut(){
+		self.movimientoOff()
+		self.procesarResultado()
+	}
+
+	method clear(){
+		filas.clear()
+		game.removeVisual(bondi)
+		game.removeVisual(personaje)
+	}
+}
+
+class FilasHorizontal{
+	const property personas = #{}
+	
+	// Arma una fila de "largo" hacia la derecha comenzado desde "posicionInicio".
+	// Se debe indicar en que numero hay un hueco ("posicionHueco").
+	method armarFila(largo, posicionHueco, posicionInicio){
+		var x = posicionInicio.x()
+		const y = posicionInicio.y()
+		largo.times({ i => 
+			if (i  != posicionHueco){
+				const nuevaPersona = new Persona(position = game.at(x, y))
+				game.addVisual(nuevaPersona)
+				personas.add(nuevaPersona)
+			}
+			x ++
+		})
+	}
+	
+	method clear(){
+		personas.forEach( {  persona => game.removeVisual(persona) })
+	}	
+	
+	method posicionPersonas() {
+		return self.personas().map( { persona => persona.position() } )
+	}
+}
+
+class Persona {
+	const property image = "persona.png"
+	const property position = game.at(-10,-10)
+}
+
+class PersonajeBondi {
+	const property image = "P1.PNG"
+	var property position = game.at(-10,-10)
+}
+
+class Bondi {
+	const property image = "bondi.PNG"
+	var property position = game.at(-10,-10)
+}
