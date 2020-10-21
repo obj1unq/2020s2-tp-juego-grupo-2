@@ -53,7 +53,7 @@ object miniGameFactory{
 		return new PYR( pregunta = _pregunta, image = _pregunta.image()  )
 	}
 	
-	method escape(){
+	method correBondi(){
 		return new CorreBondi()		
 	}
 }
