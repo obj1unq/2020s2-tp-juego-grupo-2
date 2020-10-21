@@ -1,0 +1,97 @@
+import camino.*
+import wollok.game.*
+
+describe "Casilla test" {
+	
+	const caminoCorto = new Camino(posiciones = [])
+	const casillaNueva = new Casilla(position = game.at(10, 10), numero = 0, camino= caminoCorto)
+
+	test "test una casilla creada en una posicion la contiene" {
+		const posicionInicial = game.at(2, 1)
+		const casilla = new Casilla(position = posicionInicial, numero = 0, camino= caminoCorto)
+		assert.that(casilla.contiene(posicionInicial))
+	}
+
+	test "test una casilla creada en una posicion contiene la posicion a su izquierda" {
+		const posicionInicial = game.at(2, 1)
+		const casilla = new Casilla(position = posicionInicial, numero = 0, camino= caminoCorto)
+		assert.that(casilla.contiene(posicionInicial.left(1)))
+	}
+
+	test "test una casilla creada en una posicion contiene la posicion que esta arriba" {
+		const posicionInicial = game.at(2, 1)
+		const casilla = new Casilla(position = posicionInicial, numero = 0, camino= caminoCorto)
+		assert.that(casilla.contiene(posicionInicial.up(1)))
+	}
+
+	test "test una casilla creada en una posicion contiene la posicion que esta en diagonal superior izquierda" {
+		const posicionInicial = game.at(2, 1)
+		const casilla = new Casilla(position = posicionInicial, numero = 0, camino= caminoCorto)
+		assert.that(casilla.contiene(posicionInicial.up(1).left(1)))
+	}
+
+}
+
+describe "Camino test" {
+
+	const posiciones = [ game.at(10,10), game.at(10,12), game.at(10,14) ]
+	const caminoCorto = new Camino(posiciones = posiciones)
+
+	test "test un camino tiene las casillas enumeradas al crearse" {
+		assert.equals(0, caminoCorto.partida().numero())
+	}
+
+	
+	test "test un camino tiene una casilla de partida" {
+		assert.that(caminoCorto.partida().esCasilla())
+	}
+	
+	test "test un camino retorna la casilla siguiente a la dada por su numeracion" {
+		const casillaDePartida = caminoCorto.partida()
+		const siguienteAPartida = caminoCorto.siguienteA(casillaDePartida)
+		assert.equals(1, siguienteAPartida.numero())
+	}
+
+	test "test un camino retorna la casilla anterior a la dada por su numeracion" {
+		const casillaDePartida = caminoCorto.partida()
+		const siguienteAPartida = caminoCorto.siguienteA(casillaDePartida)
+		assert.equals(0, caminoCorto.anteriorA(siguienteAPartida).numero())
+	}
+	
+
+	test "test un camino tiene una casilla de llegada" {
+		assert.that(caminoCorto.llegada().esCasilla())
+	}
+
+	test "test dada una posicion el camino retorna la casilla en la que esta" {
+		const posicion = game.at(9, 12)
+		assert.that(caminoCorto.casillaEn(posicion).esCasilla())
+	}
+
+	test "test dada una posicion fuera del camino, este retorna un error" {
+		const posicion = game.at(12, 12)
+		assert.throwsExceptionWithMessage("La posicion esta fuera del camino", { caminoCorto.casillaEn(posicion)})
+	}
+
+	test "test dada una casilla el camino retorna true si es la de partida" {
+		const unaCasilla = new Casilla(position = game.at(10, 10), numero = 0, camino= caminoCorto)
+		assert.that(caminoCorto.esPartida(unaCasilla))
+	}
+
+	test "test dada una casilla el camino retorna false si no es la de partida" {
+		const unaCasilla = new Casilla(position = game.at(10, 12), numero = 0, camino= caminoCorto)
+		assert.notThat(caminoCorto.esPartida(unaCasilla))
+	}
+
+	test "test dada una casilla el camino retorna true si es la de llegada" {
+		const unaCasilla = new Casilla(position = game.at(10, 14), numero = 0, camino= caminoCorto)
+		assert.that(caminoCorto.esLlegada(unaCasilla))
+	}
+
+	test "test dada una casilla el camino retorna false si no es la de llegada" {
+		const unaCasilla = new Casilla(position = game.at(10, 12), numero = 0, camino= caminoCorto)
+		assert.notThat(caminoCorto.esLlegada(unaCasilla))
+	}
+
+}
+

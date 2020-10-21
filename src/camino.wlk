@@ -1,62 +1,92 @@
 import wollok.game.*
 
 //boceteando el camino
-object camino {
+class Camino {
 
-	//listacasillas [(24,6),(21,6),(18,6),(15,6),(12,6),(9,6),(6,6),(5,9),
-	//(5,13),(7,15),(10,15),(13,14),(16,14),(19,13),(22,14),(24,16),(25,20),
-	//(23,23),(20,23),(17,23),(14,23),(11,22),(8,22),(5,24),(5,28),(6,31),
-	//(9,32),(12,32),(15,31),(15,31),(18,31),(21,31),(24,31)]
+	const property posiciones
+	const property casillas = []
 
-	const property partida = new Casilla(position = (game.at(27, 6)), siguiente = primerTramo.primera())
-	const property llegada = new Casilla(position = game.at(27, 31), siguiente = null)
-	const property casillas = primerTramo.tramo()
-	
-
-	method llevarASiguiente(jugador){
-		const posicion = jugador.position()
-		const casillaActual = self.estaEn(posicion)
-		jugador.position(casillaActual.siguiente().position())
+	override method initialize() {
+		self.construirse(posiciones)
+		posiciones.clear()
 	}
-	
-	method estaEn(posicion){
-//		const posicion = jugador.position()
-		return self.casillas().find({casilla => casilla.contiene(posicion)})
+
+	method construirse(_posiciones) {
+		var _numero = 0
+		_posiciones.forEach({ posicion =>
+			casillas.add(new Casilla(position = posicion, numero = _numero, camino = self))
+		;_numero += 1
+		})
 	}
-	
-	
-	
-}
 
-object primerTramo {
+	method partida() {
+		return casillas.first()
+	}
 
-	const property tramo = [ new Casilla(position = (game.at(24,6)), siguiente = null) ]
+	method llegada() {
+		return casillas.last()
+	}
 
-	method primera() {
-		return tramo.first()
+	method casillaEn(_posicion) {
+		return casillas.findOrElse({ casilla => casilla.contiene(_posicion) }, { self.error("La posicion esta fuera del camino") })
+	}
+
+	method esPartida(_casilla) {
+		return self.partida() == _casilla
+	}
+
+	method esLlegada(_casilla) {
+		return self.llegada() == _casilla
+	}
+
+	method casillaNumero(unNumero) {
+		return casillas.get(unNumero)
+	}
+
+	method siguienteA(_casilla) {
+		return _casilla.siguiente()
+	}
+
+	method anteriorA(_casilla) {
+		return _casilla.anterior()
 	}
 
 }
 
 class Casilla {
 
-	const property position
-	const property anterior = null
-	const property siguiente // Casilla
+	const property numero
+	const camino
+	const position
 
-	//la idea es q se utilice para asignar el lugar que ocupa un visual
-	method position() {
-		return self.posicionConcreta().anyOne()
+	override method ==(other) {
+		return self.representacion() == other.representacion()
 	}
-	
-	//esta retorna las posiciones que representan la casilla
-	method posicionConcreta(){
-		return [position, position.up(1), position.left(1), position.up(1).left(1)]
+
+	method representacion() {
+		return [ position, position.left(1), position.up(1), position.up(1).left(1) ]
 	}
-	
-	//retorna si una posicion forma parte de la representacion de la casilla
-	method contiene(unaPosicion){
-		return self.posicionConcreta().contains(unaPosicion) 
+
+	method contiene(unaPosicion) {
+		return self.representacion().contains(unaPosicion)
+	}
+
+	method esCasilla() {
+		return true
+	}
+
+	method ubicacion() {
+		return self.representacion().anyOne()
+	}
+
+	// retorna el numero de la que deberia ser la siguiente casilla
+	method siguiente() {
+		return camino.casillaNumero(numero + 1)
+	}
+
+	// retorna el numero de la que deberia ser la anterior casilla
+	method anterior() {
+		return camino.casillaNumero(numero - 1)
 	}
 
 }

@@ -1,0 +1,26 @@
+import wollok.game.*
+import camino.*
+import personajes.*
+
+describe "inicializacion jugadores" {
+	const posiciones = [game.at(10,10),game.at(10,12),game.at(10,14)]
+	const camino = new Camino(posiciones = posiciones)
+
+	test "test un jugador inicia en la partida del camino" {
+		const jugador = new Jugador(camino = camino) 
+		assert.equals(jugador.casillaActual(), camino.partida())
+	}
+	
+	test "test un jugador esta posicionado en la partida del camino" {
+		const jugador = new Jugador(camino = camino) 
+		assert.equals(camino.casillaEn(jugador.position()), camino.partida())
+	}
+	
+	test "test un jugador avanza una casilla"{
+		const jugador = new Jugador(camino = camino) 
+		jugador.avanzar()
+		assert.notThat(camino.esPartida(jugador.casillaActual()))
+	}
+
+}
+

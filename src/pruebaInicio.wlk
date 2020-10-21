@@ -14,7 +14,7 @@ object tutorial {
 
 object jugador {
 
-	var property position = camino.partida().siguiente().position()
+	var property position = camino.casillas().first().posicion()
 	method image() {
 		return "jugador.png"
 	}
