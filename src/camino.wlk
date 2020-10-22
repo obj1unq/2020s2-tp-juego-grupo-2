@@ -11,9 +11,9 @@ class Camino {
 		self.construirse(posiciones)
 		posiciones.clear()
 	}
-	
-	method validarParaConstruirse(){
-		if(posiciones.isEmpty()){
+
+	method validarParaConstruirse() {
+		if (posiciones.isEmpty()) {
 			self.error("Un camino no puede ser vacio")
 		}
 	}
@@ -35,9 +35,7 @@ class Camino {
 	}
 
 	method casillaEn(_posicion) {
-		return casillas.findOrElse({ casilla => casilla.contiene(_posicion) },
-			{ self.error("La posicion esta fuera del camino") }
-		)
+		return casillas.findOrElse({ casilla => casilla.contiene(_posicion) }, { self.error("La posicion esta fuera del camino") })
 	}
 
 	method esPartida(_casilla) {
@@ -70,6 +68,30 @@ class Casilla {
 	const camino
 	const position
 
+	override method initialize() {
+		self.validarPosicion()
+		self.validarNumero()
+		self.validarCamino()
+	}
+
+	method validarPosicion() {
+		if (position.className() != "wollok.game.Position") {
+			self.error("Debe recibir una posicion valida")
+		}
+	}
+
+	method validarNumero() {
+		if (numero < 0) {
+			self.error("El numero debe ser igual o mayor a cero")
+		}
+	}
+
+	method validarCamino() {
+		if (camino.className() != "camino.Camino") {
+			self.error("Debe recibir un camino valido")
+		}
+	}
+
 	method representacion() {
 		return [ position, position.left(1), position.up(1), position.up(1).left(1) ]
 	}
@@ -77,10 +99,6 @@ class Casilla {
 	method contiene(unaPosicion) {
 		return self.representacion().contains(unaPosicion)
 	}
-
-//	method esCasilla() {
-//		return true
-//	}
 
 	method ubicacion() {
 		return self.representacion().anyOne()

@@ -6,6 +6,10 @@ describe "inicializacion jugadores" {
 	const posiciones = [game.at(10,10),game.at(10,12),game.at(10,14)]
 	const camino = new Camino(posiciones = posiciones)
 
+	test "test un jugador debe recibir un camino para saber donde iniciar"{
+		assert.throwsExceptionWithMessage("Debe recibir un camino", {new Jugador(camino = "esto no es un camino")})
+	}
+	
 	test "test un jugador inicia en la partida del camino" {
 		const jugador = new Jugador(camino = camino) 
 		assert.equals(jugador.casillaActual(), camino.partida())

@@ -30,6 +30,17 @@ describe "Casilla test" {
 		assert.that(casilla.contiene(posicionInicial.up(1).left(1)))
 	}
 
+	test "test una casilla debe recibir una posicion valida"{
+		assert.throwsExceptionWithMessage("Debe recibir una posicion valida", {new Casilla(position = 10, numero= 0, camino= caminoCorto)})
+	}
+	
+	test "test una casilla debe recibir un numero positivo"{
+		assert.throwsExceptionWithMessage("El numero debe ser igual o mayor a cero", {new Casilla(position = game.at(0,0), numero= -10, camino= caminoCorto)})
+	}
+	
+	test "test una casilla debe recibir un camino valido"{
+		assert.throwsExceptionWithMessage("Debe recibir un camino valido", {new Casilla(position = game.at(0,0), numero= 10, camino= "esto no es un camino")})
+	}
 }
 
 describe "Camino test" {

@@ -25,8 +25,15 @@ class Jugador {
 	var property casillaActual = null
 
 	override method initialize() {
+		self.validarCamino()
 		casillaActual = camino.partida()
 		position = casillaActual.ubicacion()
+	}
+
+	method validarCamino() {
+		if (camino.className() != "camino.Camino") {
+			self.error("Debe recibir un camino")
+		}
 	}
 
 	method avanzar() {
