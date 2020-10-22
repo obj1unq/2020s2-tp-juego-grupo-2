@@ -30,7 +30,7 @@ class Jugador {
 	}
 
 	method avanzar() {
-		casillaActual = casillaActual.siguiente()
+		casillaActual = camino.siguienteA(casillaActual)
 		position = casillaActual.ubicacion()
 	}
 
