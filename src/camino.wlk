@@ -3,12 +3,19 @@ import wollok.game.*
 //boceteando el camino
 class Camino {
 
-	const property posiciones
+	const posiciones
 	const property casillas = []
 
 	override method initialize() {
+		self.validarParaConstruirse()
 		self.construirse(posiciones)
 		posiciones.clear()
+	}
+
+	method validarParaConstruirse() {
+		if (posiciones.isEmpty()) {
+			self.error("Un camino no puede ser vacio")
+		}
 	}
 
 	method construirse(_posiciones) {
@@ -44,11 +51,13 @@ class Camino {
 	}
 
 	method siguienteA(_casilla) {
-		return _casilla.siguiente()
+		const posicionSiguiente = _casilla.numero() + 1
+		return self.casillaNumero(posicionSiguiente)
 	}
 
 	method anteriorA(_casilla) {
-		return _casilla.anterior()
+		const posicionAnterior = _casilla.numero() - 1
+		return self.casillaNumero(posicionAnterior)
 	}
 
 }
@@ -59,8 +68,28 @@ class Casilla {
 	const camino
 	const position
 
-	override method ==(other) {
-		return self.representacion() == other.representacion()
+	override method initialize() {
+		self.validarPosicion()
+		self.validarNumero()
+		self.validarCamino()
+	}
+
+	method validarPosicion() {
+		if (position.className() != "wollok.game.Position") {
+			self.error("Debe recibir una posicion valida")
+		}
+	}
+
+	method validarNumero() {
+		if (numero < 0) {
+			self.error("El numero debe ser igual o mayor a cero")
+		}
+	}
+
+	method validarCamino() {
+		if (camino.className() != "camino.Camino") {
+			self.error("Debe recibir un camino valido")
+		}
 	}
 
 	method representacion() {
@@ -71,22 +100,8 @@ class Casilla {
 		return self.representacion().contains(unaPosicion)
 	}
 
-	method esCasilla() {
-		return true
-	}
-
 	method ubicacion() {
 		return self.representacion().anyOne()
-	}
-
-	// retorna el numero de la que deberia ser la siguiente casilla
-	method siguiente() {
-		return camino.casillaNumero(numero + 1)
-	}
-
-	// retorna el numero de la que deberia ser la anterior casilla
-	method anterior() {
-		return camino.casillaNumero(numero - 1)
 	}
 
 }
