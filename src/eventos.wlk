@@ -101,6 +101,28 @@ object resultadoPGE {
 
 
 /*-----------------------------------------------------------------------------------------------------------
+	 									Timer
+-------------------------------------------------------------------------------------------------------------*/
+
+
+object timer{
+	var property image = "vacio.png"
+	var property position = game.at(14,28)
+
+	//Solo admite numeros del 1 al 9
+	method countDown(segundos){
+		image = segundos.toString() + ".png"
+		var time = 1000 * segundos
+		segundos.times( { i => 
+			game.schedule(time, { image = (i - 1).toString() + ".png" } )
+			time = time - 1000
+		})
+	}
+
+}
+
+
+/*-----------------------------------------------------------------------------------------------------------
 	 									Super clase mini juego
 -------------------------------------------------------------------------------------------------------------*/
 class Minijuego {
@@ -170,46 +192,57 @@ class PPT inherits Minijuego{
 		game.removeVisual(resultadoPGE)
 		eleccionMaquina.desactivar()
 		self.seleccionOn()
-		game.schedule(5000, { 	self.timeOut()  } )
+		self.startCountDown()
 	}
 	
 	method procesarResultado(resultado){
 		if (resultado == 1){
 			resultadoPGE.gana()
-			game.addVisualIn(resultadoPGE,game.at(10,14)) //le aviso al tablero que gano jugador
+			game.addVisualIn(resultadoPGE,game.at(10,15)) //le aviso al tablero que gano jugador
 			game.schedule( 3000, { miniGameManager.clear() } )
 		} else { 
 			if (resultado == 2) {
 				resultadoPGE.pierde()
-				game.addVisualIn(resultadoPGE,game.at(10,14))	//le aviso al tablero que perdio jugador
+				game.addVisualIn(resultadoPGE,game.at(10,15))	//le aviso al tablero que perdio jugador
 				game.schedule( 3000, {	miniGameManager.clear() } )
 			}
 			else {
 				resultadoPGE.empata()
-				game.addVisualIn(resultadoPGE,game.at(10,14))
+				game.addVisualIn(resultadoPGE,game.at(10,15))
 				game.schedule(5000, { self.reboot() } )
 			}
 		}
 	}
 	
+	method startCountDown(){
+		timer.countDown(5)
+		game.schedule(5000, { self.timeOut() })
+		self.seleccionOn()
+	}
+	
 	override method start(){
+		//Preparo las opciones de la maquina
 		const piedraMaquina = opcionesFactory.piedra()
 		const papelMaquina = opcionesFactory.papel()
 		const tijeraMaquina = opcionesFactory.tijera()
 		[piedraMaquina, papelMaquina, tijeraMaquina].forEach( { objeto => opcionesMaquina.add(objeto)} )
+		//Preparo las opciones del Jugador
 		const piedraJugador = opcionesFactory.piedra()
 		const papelJugador = opcionesFactory.papel()
 		const tijeraJugador = opcionesFactory.tijera()
 		[piedraJugador, papelJugador, tijeraJugador].forEach( { objeto => opcionesJugador.add(objeto)} )
+		//Agrego las visuales
 		game.addVisualIn(piedraMaquina, game.at(6,17))
 		game.addVisualIn(papelMaquina, game.at(12,21))
 		game.addVisualIn(tijeraMaquina, game.at(18,17))
 		game.addVisualIn(piedraJugador, game.at(6,8))
 		game.addVisualIn(papelJugador, game.at(12,5))
 		game.addVisualIn(tijeraJugador, game.at(18,8))
+		game.addVisual(timer)
+		//Activo la eleccion inicial
 		opcionesJugador.get(index).activar()
-		self.seleccionOn()
-		game.schedule(5000, { self.timeOut() })
+		//Arranco el contador y empieza el juego
+		self.startCountDown()
 	}
 
 	method timeOut(){
@@ -217,10 +250,11 @@ class PPT inherits Minijuego{
 		eleccionMaquina = self.elegirMaquina()
 		const eleccionJugador = opcionesJugador.get(index)
 		game.schedule( 1000, { eleccionMaquina.activar() })
-		game.schedule( 2000, { self.procesarResultado(eleccionJugador.compararCon(eleccionMaquina))	} )
+		game.schedule( 1500, { self.procesarResultado(eleccionJugador.compararCon(eleccionMaquina))	} )
 	}
 
 	override method clear(){
+		game.removeVisual(timer)
 		game.removeVisual(resultadoPGE)
 		opcionesJugador.forEach( { opcion => game.removeVisual(opcion) } )
 		opcionesMaquina.forEach( { opcion => game.removeVisual(opcion) } )
@@ -353,6 +387,8 @@ class PYR inherits Minijuego{
 		selector.position(posicionesRespuestas.get(indexSelector))	
 		game.addVisual(selector)
 		selector.on()
+		game.addVisual(timer)
+		timer.countDown(5)
 		game.schedule(5000, {	self.timeOut()  } )
 	}
 
@@ -362,6 +398,7 @@ class PYR inherits Minijuego{
 	}
 
 	override method clear(){
+		game.removeVisual(timer)
 		game.removeVisual(selector)
 	}
 }
@@ -451,16 +488,18 @@ class CorreBondi inherits Minijuego{
 		pjBondi.position(game.at(15, 6))
 		game.addVisual(pjBondi)
 		self.movimientoOn()
+		game.addVisual(timer)
+		timer.countDown(5)
 		game.schedule(5000, {	self.timeOut()  } )
 	}
 
 	method timeOutBondi(){
-		var time = 500
+		var time = 100
 		8.times{ i =>
 			game.schedule(time, { bondi.position(bondi.position().right(1)) } )
 			time = time + 100
 		}
-		game.schedule(time, { 	bondi.image("vacio.png")
+		game.schedule(time + 100, { bondi.image("vacio.png")
 								self.procesarResultado() } )	
 	}
 
@@ -471,6 +510,7 @@ class CorreBondi inherits Minijuego{
 
 	override method clear(){
 		filas.clear()
+		game.removeVisual(timer)
 		game.removeVisual(resultadoPGE)
 		game.removeVisual(bondi)
 		game.removeVisual(pjBondi)
