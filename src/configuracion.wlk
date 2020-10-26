@@ -28,6 +28,10 @@ object configurar {
 		
 		// Jugador
 		keyboard.c().onPressDo({ game.say(jugador, jugador.position().toString()) })
+		keyboard.up().onPressDo({ jugador.moverA(jugador.position().up(1)) })
+		keyboard.down().onPressDo({ jugador.moverA(jugador.position().down(1))})
+		keyboard.left().onPressDo({ jugador.moverA(jugador.position().left(1)) })
+		keyboard.right().onPressDo({ jugador.moverA(jugador.position().right(1)) })
 		
 		//Minijuegos
 		keyboard.up().onPressDo({ miniGameManager.keyUp() })

@@ -51,13 +51,25 @@ class Camino {
 	}
 
 	method siguienteA(_casilla) {
-		const posicionSiguiente = _casilla.numero() + 1
+		const posicionSiguiente = _casilla.numeroSiguiente()
 		return self.casillaNumero(posicionSiguiente)
 	}
 
 	method anteriorA(_casilla) {
-		const posicionAnterior = _casilla.numero() - 1
+		const posicionAnterior = _casilla.numeroAnterior()
 		return self.casillaNumero(posicionAnterior)
+	}
+	
+	method distanciaALaLlegada(_casilla){
+		return self.numeroLlegada() - self.distanciaALaPartida(_casilla)
+	}
+	
+	method numeroLlegada(){
+		return self.llegada().numero()
+	}
+	
+	method distanciaALaPartida(_casilla){
+		return _casilla.numero()
 	}
 
 }
@@ -102,6 +114,14 @@ class Casilla {
 
 	method ubicacion() {
 		return self.representacion().anyOne()
+	}
+	
+	method numeroSiguiente(){
+		return numero + 1
+	}
+	
+	method numeroAnterior(){
+		return numero - 1
 	}
 
 }

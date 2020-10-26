@@ -25,6 +25,46 @@ describe "inicializacion jugadores" {
 		jugador.avanzar()
 		assert.notThat(camino.esPartida(jugador.casillaActual()))
 	}
+	
+	test "test un jugador avanza y retrocede una casilla"{
+		const jugador = new Jugador(camino = camino) 
+		jugador.avanzar()
+		jugador.retroceder()
+		assert.that(camino.esPartida(jugador.casillaActual()))
+	}
+
+	test "test un jugador avanza 2 casillas"{
+		const jugador = new Jugador(camino = camino) 
+		jugador.avanzar(2)
+		assert.that(camino.esLlegada(jugador.casillaActual()))
+	}
+	
+	test "test un jugador retorcede 2 casillas"{
+		const jugador = new Jugador(camino = camino) 
+		jugador.avanzar(2)
+		jugador.retroceder(2)
+		assert.that(camino.esPartida(jugador.casillaActual()))
+	}
+	
+	test "test un jugador no puede avanzar mas alla de la meta"{
+		const jugador = new Jugador(camino = camino) 
+		assert.throwsExceptionWithMessage("No puede avanzar mas alla de la meta", {jugador.avanzar(3)})
+		
+	}
+
+	test "test un jugador no puede retroceder mas alla de la partida"{
+		const jugador = new Jugador(camino = camino) 
+		assert.throwsExceptionWithMessage("No puede retroceder mas alla de la partida", {jugador.retroceder(1)})
+		
+	}
+
+	test "test un jugador avanza hasta la llegada y retrocede la cantidad restante de movimientos"{
+		const jugador = new Jugador(camino = camino) 
+		jugador.moverse(4)
+		assert.that(camino.esPartida(jugador.casillaActual()))
+		
+	}
+		
 
 }
 
