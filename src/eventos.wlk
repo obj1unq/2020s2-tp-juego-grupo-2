@@ -87,15 +87,15 @@ object resultadoPGE {
 	var property position = game.at(-10,-10)
 	
 	method gana() {
-		image = "resultadoGana.png" 	
+		image = "silvio_ganaste.png" 	
 	}
 
 	method pierde() {
-		image = "resultadoPierde.png"	
+		image = "silvio_perdiste.png"	
 	}
 
 	method empata() {
-		image = "resultadoEmpata.png"
+		image = "silvio_empate.png"
 	}	
 }
 
@@ -198,17 +198,17 @@ class PPT inherits Minijuego{
 	method procesarResultado(resultado){
 		if (resultado == 1){
 			resultadoPGE.gana()
-			game.addVisualIn(resultadoPGE,game.at(10,15)) //le aviso al tablero que gano jugador
+			game.addVisualIn(resultadoPGE,game.at(10,11)) //le aviso al tablero que gano jugador
 			game.schedule( 3000, { miniGameManager.clear() } )
 		} else { 
 			if (resultado == 2) {
 				resultadoPGE.pierde()
-				game.addVisualIn(resultadoPGE,game.at(10,15))	//le aviso al tablero que perdio jugador
+				game.addVisualIn(resultadoPGE,game.at(10,11))	//le aviso al tablero que perdio jugador
 				game.schedule( 3000, {	miniGameManager.clear() } )
 			}
 			else {
 				resultadoPGE.empata()
-				game.addVisualIn(resultadoPGE,game.at(10,15))
+				game.addVisualIn(resultadoPGE,game.at(10,11))
 				game.schedule(5000, { self.reboot() } )
 			}
 		}
