@@ -20,8 +20,8 @@ object configurar {
 		game.width(30)//15
 		game.cellSize(30)//50
 		game.boardGround("tablero_01.jpg")
-		const camino = new Camino(posiciones = listacasillas)
-		camino.construirse(listacasillas)
+		const camino = new Camino()
+		camino.inicializar(listacasillas)
 	}
 
 	method teclas() {

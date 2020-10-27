@@ -21,19 +21,23 @@ class Personaje {
 class Jugador {
 
 	const property camino
-	var property position = null
 	var property casillaActual = null
+	var property position = null
 
-	override method initialize() {
-		self.validarCamino()
+//	override method initialize() {
+//		self.validarCamino()
+//		casillaActual = camino.partida()
+//		position = casillaActual.ubicacion()
+//	}
+//
+//	method validarCamino() {
+//		if (camino.className() != "camino.Camino") {
+//			self.error("Debe recibir un camino")
+//		}
+//	}
+	method inicializar(){
 		casillaActual = camino.partida()
 		position = casillaActual.ubicacion()
-	}
-
-	method validarCamino() {
-		if (camino.className() != "camino.Camino") {
-			self.error("Debe recibir un camino")
-		}
 	}
 
 	method avanzar() {
