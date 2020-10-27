@@ -33,6 +33,10 @@ object configurar {
 		keyboard.left().onPressDo({ jugador.moverA(jugador.position().left(1)) })
 		keyboard.right().onPressDo({ jugador.moverA(jugador.position().right(1)) })
 		
+		//Turno
+		
+		keyboard.t().onPressDo({dado.tirar()})
+		
 		//Minijuegos
 		keyboard.up().onPressDo({ miniGameManager.keyUp() })
 		keyboard.down().onPressDo({ miniGameManager.keyDown() })
