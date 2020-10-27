@@ -1,6 +1,6 @@
 import wollok.game.*
 import camino.*
-import personajes.*
+import jugadores.*
 
 describe "inicializacion jugadores" {
 	const posiciones = [game.at(10,10),game.at(10,12),game.at(10,14)]
@@ -52,19 +52,19 @@ describe "inicializacion jugadores" {
 		assert.that(camino.esPartida(jugador.casillaActual()))
 	}
 	
-	test "test un jugador no puede avanzar mas alla de la meta"{
-		const jugador = new Jugador(camino = camino) 
-		jugador.inicializar()
-		assert.throwsExceptionWithMessage("No puede avanzar mas alla de la meta", {jugador.avanzar(3)})
-		
-	}
-
-	test "test un jugador no puede retroceder mas alla de la partida"{
-		const jugador = new Jugador(camino = camino) 
-		jugador.inicializar()
-		assert.throwsExceptionWithMessage("No puede retroceder mas alla de la partida", {jugador.retroceder(1)})
-		
-	}
+//	test "test un jugador no puede avanzar mas alla de la meta"{
+//		const jugador = new Jugador(camino = camino) 
+//		jugador.inicializar()
+//		assert.throwsExceptionWithMessage("No puede avanzar mas alla de la meta", {jugador.avanzar(3)})
+//		
+//	}
+//
+//	test "test un jugador no puede retroceder mas alla de la partida"{
+//		const jugador = new Jugador(camino = camino) 
+//		jugador.inicializar()
+//		assert.throwsExceptionWithMessage("No puede retroceder mas alla de la partida", {jugador.retroceder(1)})
+//		
+//	}
 
 	test "test un jugador avanza hasta la llegada y retrocede la cantidad restante de movimientos"{
 		const jugador = new Jugador(camino = camino) 

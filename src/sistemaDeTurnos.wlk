@@ -1,6 +1,3 @@
-import configuracion.*
-import camino.*
-import personajes.*
 import wollok.game.*
 
 object turno{

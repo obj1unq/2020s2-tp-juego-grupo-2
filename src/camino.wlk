@@ -51,18 +51,6 @@ class Camino {
 		return self.casillaNumero(posicionAnterior)
 	}
 	
-	method distanciaALaLlegada(_casilla){
-		return self.numeroLlegada() - self.distanciaALaPartida(_casilla)
-	}
-	
-	method numeroLlegada(){
-		return self.llegada().numero()
-	}
-	
-	method distanciaALaPartida(_casilla){
-		return _casilla.numero()
-	}
-
 }
 
 class Casilla {
@@ -88,6 +76,10 @@ class Casilla {
 	
 	method numeroAnterior(){
 		return numero - 1
+	}
+	
+	method distanciaA(_casillaDestino){
+		return (_casillaDestino.numero() - self.numero()).abs()
 	}
 
 }
