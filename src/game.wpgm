@@ -1,6 +1,5 @@
 import wollok.game.*
 import pruebaInicio.*
-import camino.*
 
 program game {
 	game.title("Juego Test")

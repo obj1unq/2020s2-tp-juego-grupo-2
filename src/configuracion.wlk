@@ -40,7 +40,7 @@ object configurar {
 		keyboard.down().onPressDo({ miniGameManager.keyDown() })
 		keyboard.left().onPressDo({ miniGameManager.keyLeft() })
 		keyboard.right().onPressDo({ miniGameManager.keyRight() })
-		//keyboard.num1().onPressDo({ turno. })
+//		keyboard.num1().onPressDo({ turno. })
 		keyboard.s().onPressDo({ miniGameManager.load(miniGameFactory.ppt()) miniGameManager.start() })	
 		keyboard.d().onPressDo({ miniGameManager.load(miniGameFactory.pyr()) miniGameManager.start() })	
 		keyboard.a().onPressDo({ miniGameManager.load(miniGameFactory.correBondi()) miniGameManager.start() })	
