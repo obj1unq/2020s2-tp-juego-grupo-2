@@ -40,8 +40,8 @@ class Jugador {
 	}
 
 	method moverse(movimientos) {
-		const hastaLlegada = casillaActual.distanciaA(camino.llegada())
 		var tiempoActual = 0
+		const hastaLlegada = casillaActual.distanciaA(camino.llegada())
 		if (hastaLlegada < movimientos) {
 			const retroceso = movimientos - hastaLlegada
 			tiempoActual = self.avanzar(hastaLlegada, tiempoActual)

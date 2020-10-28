@@ -1,5 +1,4 @@
 import wollok.game.*
-import jugadores.*
 
 object turno {
 
@@ -7,8 +6,15 @@ object turno {
 	const property listaDePersonajes = []
 
 	method agregarPersonaje(personaje) {
+		self.validarParaAgregar()
 		game.addVisual(personaje)
 		listaDePersonajes.add(personaje)
+	}
+	
+	method validarParaAgregar(){
+		if (self.cantidadDePersonajes() == 4){
+			self.error("La cantidad maxima de jugadores esta en el juego")
+		}
 	}
 
 	method jugadorActivo() {
