@@ -20,8 +20,7 @@ object turno{
 	}
 	
 	method tirarDados(){   	
-		dado.serLanzado()
-    	const movimiento = dado.resultado()
+		const movimiento = dado.serLanzado()
     	const jugador = self.jugadorActivo()
     	//jugador.movimientoCompleto(movimiento)
     	jugador.moverse(movimiento)
@@ -66,7 +65,7 @@ object dado{
 		self.nuevoResultado()
 		self.animacionDeGiro()
 		self.mostrarResultado()
-		//return resultado
+		return resultado
 	}
 }
 
