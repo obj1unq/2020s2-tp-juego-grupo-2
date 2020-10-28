@@ -1,6 +1,9 @@
+import wollok.game.*
+
 class Jugador {
 
 	const property camino
+	const property image = null
 	var property casillaActual = null
 	var property position = null
 
@@ -49,6 +52,9 @@ class Jugador {
 			const retroceso = movimientos - hastaLlegada
 			self.avanzar(hastaLlegada)
 			self.retroceder(retroceso)
+		}
+		else{
+			self.avanzar(movimientos)
 		}
 	}
 	

@@ -5,8 +5,7 @@ program game {
 	game.title("Juego Test")
 	
 	tutorial.iniciar()
-	
-	game.showAttributes(jugador)//debug
+
 	
 	game.start()
 }
