@@ -7,7 +7,7 @@ class Jugador {
 	var property casillaActual = null
 	var property position = null
 
-	method inicializar(){
+	method inicializar() {
 		casillaActual = camino.partida()
 		position = casillaActual.ubicacion()
 	}
@@ -16,47 +16,40 @@ class Jugador {
 		casillaActual = camino.siguienteA(casillaActual)
 		position = casillaActual.ubicacion()
 	}
-	
-	method retroceder(){
+
+	method retroceder() {
 		casillaActual = camino.anteriorA(casillaActual)
 		position = casillaActual.ubicacion()
 	}
-	
-	method avanzar(cantidad){
-//		self.validarAvance(cantidad)
-		cantidad.times({i =>
-			self.avanzar()
+
+	method avanzar(cantidad, tiempo) {
+		var tiempoActual = tiempo
+		cantidad.times({ i =>
+			game.schedule(tiempoActual, { self.avanzar()})
+			tiempoActual += 500
+		})
+		return tiempoActual
+	}
+
+	method retroceder(cantidad, tiempo) {
+		var tiempoActual = tiempo
+		cantidad.times({ i =>
+			game.schedule(tiempoActual, { self.retroceder()})
+			tiempoActual += 500
 		})
 	}
-	
-//	method validarAvance(cantidad){
-//		if (camino.distanciaALaLlegada(casillaActual) < cantidad){
-//			self.error("No puede avanzar mas alla de la meta")
-//		}
-//	}
-	
-	method retroceder(cantidad){
-//		self.validarRetroceso(cantidad)
-		cantidad.times({i => self.retroceder()})
-	}
-	
-//	method validarRetroceso(cantidad){
-//		if (camino.distanciaALaPartida(casillaActual) < cantidad) {
-//			self.error("No puede retroceder mas alla de la partida")
-//		}
-//	}
 
-	method moverse(movimientos){
-		const hastaLlegada = casillaActual.distanciaA(camino.llegada()) 
-		if (hastaLlegada < movimientos){
+	method moverse(movimientos) {
+		const hastaLlegada = casillaActual.distanciaA(camino.llegada())
+		var tiempoActual = 0
+		if (hastaLlegada < movimientos) {
 			const retroceso = movimientos - hastaLlegada
-			self.avanzar(hastaLlegada)
-			self.retroceder(retroceso)
-		}
-		else{
-			self.avanzar(movimientos)
+			tiempoActual = self.avanzar(hastaLlegada, tiempoActual)
+			self.retroceder(retroceso, tiempoActual)
+		} else {
+			self.avanzar(movimientos, tiempoActual)
 		}
 	}
-	
+
 }
 
