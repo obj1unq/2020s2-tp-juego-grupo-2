@@ -22,13 +22,12 @@ class Jugador {
 		position = casillaActual.ubicacion()
 	}
 
-	method avanzar(cantidad, tiempo) {
-		var tiempoActual = tiempo
+	method avanzar(cantidad) {
+		var tiempoActual = 0
 		cantidad.times({ i =>
 			game.schedule(tiempoActual, { self.avanzar()})
 			tiempoActual += 500
 		})
-		return tiempoActual
 	}
 
 	method retroceder(cantidad, tiempo) {
@@ -44,10 +43,11 @@ class Jugador {
 		const hastaLlegada = casillaActual.distanciaA(camino.llegada())
 		if (hastaLlegada < movimientos) {
 			const retroceso = movimientos - hastaLlegada
-			tiempoActual = self.avanzar(hastaLlegada, tiempoActual)
+			self.avanzar(hastaLlegada)
+			tiempoActual = hastaLlegada * 500 
 			self.retroceder(retroceso, tiempoActual)
 		} else {
-			self.avanzar(movimientos, tiempoActual)
+			self.avanzar(movimientos)
 		}
 	}
 
