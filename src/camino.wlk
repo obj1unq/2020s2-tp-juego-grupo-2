@@ -5,10 +5,6 @@ class Camino {
 
 	const property casillas = []
 
-	method inicializar(posiciones){
-		self.construirse(posiciones)
-	}
-
 	method construirse(_posiciones) {
 		var _numero = 0
 		_posiciones.forEach({ posicion =>

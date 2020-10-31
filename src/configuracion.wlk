@@ -16,7 +16,7 @@ object configurar {
 		game.width(30) // 15
 		game.cellSize(30) // 50
 		game.boardGround("tablero_01.jpg")
-		caminoDeJuego.inicializar(listacasillas)
+		caminoDeJuego.construirse(listacasillas)
 	}
 
 	method teclas() {
