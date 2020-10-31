@@ -24,13 +24,11 @@ object miniGameManager{
 	method clear(){
 		miniGame.clear()
 		game.removeVisual(miniGame)
-		game.removeVisual(relator)
 	}
 	
 	method start(){
 		game.addVisual(miniGame)
 		miniGame.start()
-		game.addVisual(relator)
 	}
 	
 	method keyUp(){
@@ -62,23 +60,9 @@ object miniGameFactory{
 	}
 }
 
-/*-----------------------------------------------------------------------------------------------------------
-	 									Relator 
--------------------------------------------------------------------------------------------------------------*/
-
-// Para visualiza los mensajes de los minijuegos en una posicion determinada del tablero
-object relator {
-	var property position = game.at(0,0)
-	const property image = "vacio.png"
-	
-	method decir(mensaje){
-		game.say(self, mensaje)
-	}
-}
-
 
 /*-----------------------------------------------------------------------------------------------------------
-	 									Resultados 
+	 									ResultadosPGE
 -------------------------------------------------------------------------------------------------------------*/
 
 
@@ -113,8 +97,11 @@ object timer{
 	method countDown(segundos){
 		image = segundos.toString() + ".png"
 		var time = 1000 * segundos
+		game.sound("sonidos/timer.wav").play()
 		segundos.times( { i => 
-			game.schedule(time, { image = (i - 1).toString() + ".png" } )
+			game.schedule(time, { image = (i - 1).toString() + ".png" 
+								  game.sound("sonidos/timer.wav").play()
+			} )
 			time = time - 1000
 		})
 	}
@@ -125,6 +112,7 @@ object timer{
 /*-----------------------------------------------------------------------------------------------------------
 	 									Super clase mini juego
 -------------------------------------------------------------------------------------------------------------*/
+
 class Minijuego {
 	const property position = game.at(0,0)
 
@@ -138,22 +126,27 @@ class Minijuego {
 	method clear()
 }
 
+
 /*-----------------------------------------------------------------------------------------------------------
-	 									Piedra Papel o tijera
+	 									Super clase mini juego con selector de 3 opciones
 -------------------------------------------------------------------------------------------------------------*/
 
-//Muestra tres opciones en pantalla y 
-
-class PPT inherits Minijuego{
-	const property image = "ppt.png"
+class MinijuegoConSelector inherits Minijuego{
 	
 	var index = 0
-	
-	const opcionesJugador = []
-	const opcionesMaquina = []
-	var eleccionMaquina = null
-
 	var seleccionActivo = false
+	var seleccionVertical = true
+	var seleccionHorizontal = false
+
+	method selectorVertical(){
+		seleccionVertical = true
+		seleccionHorizontal = false
+	}
+
+	method selectorHorizontal(){
+		seleccionVertical = false
+		seleccionHorizontal = true
+	}
 			
 	method seleccionOn(){
 		seleccionActivo = true
@@ -162,31 +155,64 @@ class PPT inherits Minijuego{
 	method seleccionOff(){
 		seleccionActivo = false
 	}
+	
+	override method keyLeft(){
+		if (seleccionActivo and seleccionHorizontal) {
+			self.seleccionarOpcion(-1)
+		}
+	}
+	
+	override method keyRight(){
+		if (seleccionActivo and seleccionHorizontal) {
+			self.seleccionarOpcion(1)
+		}
+	}
+	
+	override method keyUp(){
+		if (seleccionActivo and seleccionVertical) { 
+			self.seleccionarOpcion(1)
+		}
+	}
+	
+	override method keyDown(){
+		if (seleccionActivo and seleccionVertical) { 
+			self.seleccionarOpcion(-1)
+		}
+	}
+	
+	method seleccionarOpcion(movimientoX){
+		self.opciones().get(index).desactivar()
+		index = ( index + movimientoX ) % 3
+		if (index < 0) { 
+			index = 2
+		}
+		self.opciones().get(index).activar()
+	}
+	
+	method opciones()	
+}
+
+/*-----------------------------------------------------------------------------------------------------------
+	 									Piedra Papel o tijera
+-------------------------------------------------------------------------------------------------------------*/
+
+//Muestra tres opciones en pantalla y 
+
+class PPT inherits MinijuegoConSelector{
+	const property image = "ppt.png"
+	
+	const opcionesJugador = []
+	const opcionesMaquina = []
+	var eleccionMaquina = null
+	
+	override method opciones() {
+		return opcionesJugador
+	}
 
 	method elegirMaquina(){
 		return opcionesMaquina.get((0 .. 2).anyOne())
 	}
 
-	override method keyLeft(){
-		if (seleccionActivo) {
-			self.seleccionarOpcion(-1)
-		}
-	}
-	override method keyRight(){
-		if (seleccionActivo) {
-			self.seleccionarOpcion(1)
-		}
-	}
-	
-	method seleccionarOpcion(movimientoX){
-		opcionesJugador.get(index).desactivar()
-		index = ( index + movimientoX ) % 3
-		if (index < 0) { 
-			index = 2
-		} 
-		opcionesJugador.get(index).activar()
-	}
-	
 	method reboot(){
 		game.removeVisual(resultadoPGE)
 		eleccionMaquina.desactivar()
@@ -197,30 +223,18 @@ class PPT inherits Minijuego{
 	method procesarResultado(resultado){
 		if (resultado == 1){
 			resultadoPGE.gana()
-<<<<<<< HEAD
-			game.addVisual(resultadoPGE) //le aviso al tablero que gano jugador
-=======
 			game.addVisualIn(resultadoPGE,game.at(10,11)) //le aviso al tablero que gano jugador
->>>>>>> branch 'master' of https://github.com/obj1unq/2020s2-tp-juego-grupo-2.git
 			game.schedule( 3000, { miniGameManager.clear() } )
 		} 
 		else if (resultado == 2) {
 				resultadoPGE.pierde()
-<<<<<<< HEAD
-				game.addVisual(resultadoPGE)	//le aviso al tablero que perdio jugador
-=======
 				game.addVisualIn(resultadoPGE,game.at(10,11))	//le aviso al tablero que perdio jugador
->>>>>>> branch 'master' of https://github.com/obj1unq/2020s2-tp-juego-grupo-2.git
-				game.schedule( 3000, {	miniGameManager.clear() } )
+				game.schedule( 3000, { miniGameManager.clear() } )
 		}
 		else {
 				resultadoPGE.empata()
-<<<<<<< HEAD
-				game.addVisual(resultadoPGE)
-=======
 				game.addVisualIn(resultadoPGE,game.at(10,11))
->>>>>>> branch 'master' of https://github.com/obj1unq/2020s2-tp-juego-grupo-2.git
-				game.schedule(5000, { self.reboot() } )
+				game.schedule( 3000, { self.reboot() } )
 		}
 	}
 	
@@ -231,6 +245,8 @@ class PPT inherits Minijuego{
 	}
 	
 	override method start(){
+		//Configuro el selector
+		self.selectorHorizontal()
 		//Preparo las opciones de la maquina
 		const piedraMaquina = opcionesFactory.piedra()
 		const papelMaquina = opcionesFactory.papel()
@@ -250,7 +266,7 @@ class PPT inherits Minijuego{
 		game.addVisualIn(tijeraJugador, game.at(18,8))
 		game.addVisual(timer)
 		//Activo la eleccion inicial
-		opcionesJugador.get(index).activar()
+		self.opciones().get(index).activar()
 		//Arranco el contador y empieza el juego
 		self.startCountDown()
 	}
@@ -273,7 +289,6 @@ class PPT inherits Minijuego{
 
 class Piedra{
 	var property image = "piedra_0.png"
-	var property position = game.at(-10,-10)
 	const property valor = 1
 	
 	method compararCon(opcion){
@@ -288,7 +303,7 @@ class Piedra{
 			
 				3
 			} 	 
-	}
+	}	
 	
 	method activar(){
 		image = "piedra_1.png"		
@@ -296,7 +311,7 @@ class Piedra{
 	method desactivar(){
 		image = "piedra_0.png"		
 	}
-
+	
 }
 
 class Papel{
@@ -366,69 +381,72 @@ object opcionesFactory{
 // Selector PYR
 
 class Selector3x3{
-	var property image = "p_selector.png"
+	var property image = "selector0.png"
 	var property position = game.at(-10,-10)
-	var activo = false
-	
-	method on(){ activo = true }
-	method off(){ activo = false }	
-	
-	method isOn(){ return activo }
+
+	method activar(){
+		image = "selector1.png"
+		
+	}
+
+	method desactivar(){
+		image = "selector0.png"
+		
+	}
+
 }
 
 /*-----------------------------------------------------------------------------------------------------------
 	 									Preguntas y respuestas
 -------------------------------------------------------------------------------------------------------------*/
-class PYR inherits Minijuego{
+class PYR inherits MinijuegoConSelector{
 	const property image = null
 	
 	const pregunta = null
+	const opciones = []
+	
+	override method opciones() {
+		return opciones
+	}
 
-	const selector = new Selector3x3()
-	const posicionesRespuestas = [game.at(1,4), game.at(1,7), game.at(1,10)]
-	var indexSelector = 0
-	
-	override method keyUp(){
-		if (selector.isOn()) { self.posicionSelector(1) }
-	}
-	override method keyDown(){
-		if (selector.isOn()) { self.posicionSelector(-1) }
-	}
-	
-	method posicionSelector(movimientoX){
-		indexSelector = ( indexSelector + movimientoX ) % 3
-		if (indexSelector < 0) { indexSelector = 2 } 
-		selector.position(posicionesRespuestas.get(indexSelector))
-	}
-	
 	method procesarResultado(valorRespuestaElegida){
 		if (valorRespuestaElegida){
-			relator.decir("¿SABES QUE SI?") //le aviso al tablero que gano jugador
+			resultadoPYR.gana()
+			game.addVisual(resultadoPYR) //le aviso al tablero que gano jugador
 			game.schedule( 3000, { miniGameManager.clear() } )
 		} else { 
-			relator.decir("Esta mal... pero no taaan mal")	//le aviso al tablero que perdio jugador
+			resultadoPYR.pierde()
+			game.addVisual(resultadoPYR) //le aviso al tablero que gano jugador
 			game.schedule( 3000, { miniGameManager.clear() } )
 		}
 	}
 	
 	override method start(){
-		relator.position(game.at(23,14))
-		selector.position(posicionesRespuestas.get(indexSelector))	
-		game.addVisual(selector)
-		selector.on()
+		//configuro el selector
+		self.selectorVertical()
+		//Creo y agrego las imagenes del selector
+		opciones.add(new Selector3x3(position = game.at(1,4)))
+		opciones.add(new Selector3x3(position = game.at(1,7)))
+		opciones.add(new Selector3x3(position = game.at(1,10)))
+		opciones.forEach({ opcion => game.addVisual(opcion) })
+		//Activo la eleccion inicial
+		self.opciones().get(index).activar()
+		//Inicio el contador e inicio el juego
 		game.addVisual(timer)
 		timer.countDown(5)
 		game.schedule(5000, {	self.timeOut()  } )
+		self.seleccionOn()
 	}
 
 	method timeOut(){
-		selector.off()
-		self.procesarResultado( pregunta.valorRespuestas().get(indexSelector) )
+		self.seleccionOff()
+		self.procesarResultado( pregunta.valorRespuestas().get(index) )
 	}
 
 	override method clear(){
 		game.removeVisual(timer)
-		game.removeVisual(selector)
+		game.removeVisual(resultadoPYR)
+		opciones.forEach({ opcion => game.removeVisual(opcion) })
 	}
 }
 
@@ -441,6 +459,17 @@ class Pregunta {
 	const property valorRespuestas = []
 }
 
+object resultadoPYR{
+	var property position = game.at(21,13)
+	var property image = "respuestaCorrecta.png"
+
+	method gana() {
+		image = "respuesta_correcta.png"
+	}
+	method pierde() {
+		image = "respuesta_incorrecta.png"
+	}
+}
 
 /*-----------------------------------------------------------------------------------------------------------
 	 									Se va el bondi
@@ -500,11 +529,11 @@ class CorreBondi inherits Minijuego{
 	method procesarResultado(){
 		if (self.estaEnLaMeta(pjBondi)){
 			resultadoPGE.gana() //le aviso al tablero que gano el jugador
-			game.addVisual(resultadoPGE)
+			game.addVisualIn(resultadoPGE,game.at(10,11))
 			game.schedule( 3000, { miniGameManager.clear() } )
 		} else { 
 			resultadoPGE.pierde() //le aviso al tablero que perdio jugador
-			game.addVisual(resultadoPGE)
+			game.addVisualIn(resultadoPGE,game.at(10,11))
 			game.schedule( 3000, { miniGameManager.clear() } )
 		}
 	}
@@ -524,6 +553,7 @@ class CorreBondi inherits Minijuego{
 
 	method timeOutBondi(){
 		var time = 100
+		game.sound("sonidos/bondi.wav").play()
 		8.times{ i =>
 			game.schedule(time, { bondi.position(bondi.position().right(1)) } )
 			time = time + 100
