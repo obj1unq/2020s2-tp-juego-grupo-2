@@ -2,7 +2,7 @@ import wollok.game.*
 import pruebaInicio.*
 
 program game {
-	game.title("Juego Test")
+	game.title("El Juego De La Boca")
 	
 	tutorial.iniciar()
 

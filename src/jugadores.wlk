@@ -43,13 +43,12 @@ class Jugador {
 		const hastaLlegada = casillaActual.distanciaA(camino.llegada())
 		if (hastaLlegada < movimientos) {
 			const retroceso = movimientos - hastaLlegada
-			self.avanzar(hastaLlegada)
 			tiempoActual = hastaLlegada * 500 
+			self.avanzar(hastaLlegada)
 			self.retroceder(retroceso, tiempoActual)
 		} else {
 			self.avanzar(movimientos)
 		}
 	}
-
 }
 

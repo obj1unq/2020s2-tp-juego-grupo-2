@@ -9,16 +9,3 @@ object tutorial {
 	}
 }
 
-
-//object jugador {
-//
-//	var property position = game.at(0,0)
-//	method image() {
-//		return "jugador.png"
-//	}
-//	
-//	method moverA(unaPosicion){
-//		position = unaPosicion
-//	}
-//
-//}

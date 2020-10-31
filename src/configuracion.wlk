@@ -31,10 +31,10 @@ object configurar {
 		// Turno
 		keyboard.t().onPressDo({ turno.tirarDados()})
 		keyboard.num1().onPressDo({ 
-			const jugador1 = new Jugador(camino = caminoDeJuego, image = "persona" + turno.cantidadDePersonajes().toString() +".png")		
+			const jugador1 = new Jugador(camino = caminoDeJuego, image = "jugador" + turno.cantidadDePersonajes().toString() +".png")		
 			jugador1.inicializar()
 			turno.agregarPersonaje(jugador1)})
-		keyboard.c().onPressDo({ game.say(jugador1, jugador1.position())})
+		keyboard.c().onPressDo({ game.say(jugador1, jugador1.position())})	
 	
 			// Minijuegos
 		keyboard.up().onPressDo({ miniGameManager.keyUp()})
