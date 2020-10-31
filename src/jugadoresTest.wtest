@@ -1,33 +1,37 @@
 import wollok.game.*
 import camino.*
-import personajes.*
+import jugadores.*
 
 describe "inicializacion jugadores" {
 	const posiciones = [game.at(10,10),game.at(10,12),game.at(10,14)]
-	const camino = new Camino(posiciones = posiciones)
+	const camino = new Camino()
 
-	test "test un jugador debe recibir un camino para saber donde iniciar"{
-		assert.throwsExceptionWithMessage("Debe recibir un camino", {new Jugador(camino = "esto no es un camino")})
+	fixture{
+		camino.inicializar(posiciones)
 	}
 	
 	test "test un jugador inicia en la partida del camino" {
-		const jugador = new Jugador(camino = camino) 
+		const jugador = new Jugador(camino = camino)
+		jugador.inicializar() 
 		assert.equals(jugador.casillaActual(), camino.partida())
 	}
 	
 	test "test un jugador esta posicionado en la partida del camino" {
 		const jugador = new Jugador(camino = camino) 
+		jugador.inicializar()
 		assert.equals(camino.casillaEn(jugador.position()), camino.partida())
 	}
 	
 	test "test un jugador avanza una casilla"{
 		const jugador = new Jugador(camino = camino) 
+		jugador.inicializar()
 		jugador.avanzar()
 		assert.notThat(camino.esPartida(jugador.casillaActual()))
 	}
 	
 	test "test un jugador avanza y retrocede una casilla"{
 		const jugador = new Jugador(camino = camino) 
+		jugador.inicializar()
 		jugador.avanzar()
 		jugador.retroceder()
 		assert.that(camino.esPartida(jugador.casillaActual()))
@@ -35,33 +39,46 @@ describe "inicializacion jugadores" {
 
 	test "test un jugador avanza 2 casillas"{
 		const jugador = new Jugador(camino = camino) 
+		jugador.inicializar()
 		jugador.avanzar(2)
 		assert.that(camino.esLlegada(jugador.casillaActual()))
 	}
 	
 	test "test un jugador retorcede 2 casillas"{
 		const jugador = new Jugador(camino = camino) 
+		jugador.inicializar()
 		jugador.avanzar(2)
 		jugador.retroceder(2)
 		assert.that(camino.esPartida(jugador.casillaActual()))
 	}
 	
-	test "test un jugador no puede avanzar mas alla de la meta"{
-		const jugador = new Jugador(camino = camino) 
-		assert.throwsExceptionWithMessage("No puede avanzar mas alla de la meta", {jugador.avanzar(3)})
-		
-	}
-
-	test "test un jugador no puede retroceder mas alla de la partida"{
-		const jugador = new Jugador(camino = camino) 
-		assert.throwsExceptionWithMessage("No puede retroceder mas alla de la partida", {jugador.retroceder(1)})
-		
-	}
+//	test "test un jugador no puede avanzar mas alla de la meta"{
+//		const jugador = new Jugador(camino = camino) 
+//		jugador.inicializar()
+//		assert.throwsExceptionWithMessage("No puede avanzar mas alla de la meta", {jugador.avanzar(3)})
+//		
+//	}
+//
+//	test "test un jugador no puede retroceder mas alla de la partida"{
+//		const jugador = new Jugador(camino = camino) 
+//		jugador.inicializar()
+//		assert.throwsExceptionWithMessage("No puede retroceder mas alla de la partida", {jugador.retroceder(1)})
+//		
+//	}
 
 	test "test un jugador avanza hasta la llegada y retrocede la cantidad restante de movimientos"{
 		const jugador = new Jugador(camino = camino) 
+		jugador.inicializar()
 		jugador.moverse(4)
 		assert.that(camino.esPartida(jugador.casillaActual()))
+		
+	}
+	
+		test "test un jugador avanza hasta la llegada"{
+		const jugador = new Jugador(camino = camino) 
+		jugador.inicializar()
+		jugador.moverse(2)
+		assert.that(camino.esLlegada(jugador.casillaActual()))
 		
 	}
 		
