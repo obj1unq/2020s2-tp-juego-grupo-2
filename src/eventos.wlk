@@ -84,7 +84,7 @@ object relator {
 
 object resultadoPGE {
 	var property image = "resultadoGana.png"
-	var property position = game.at(-10,-10)
+	var property position = game.at(10,15)
 	
 	method gana() {
 		image = "resultadoGana.png" 	
@@ -177,7 +177,6 @@ class PPT inherits Minijuego{
 			self.seleccionarOpcion(1)
 		}
 	}
-
 	
 	method seleccionarOpcion(movimientoX){
 		opcionesJugador.get(index).desactivar()
@@ -198,19 +197,18 @@ class PPT inherits Minijuego{
 	method procesarResultado(resultado){
 		if (resultado == 1){
 			resultadoPGE.gana()
-			game.addVisualIn(resultadoPGE,game.at(10,15)) //le aviso al tablero que gano jugador
+			game.addVisual(resultadoPGE) //le aviso al tablero que gano jugador
 			game.schedule( 3000, { miniGameManager.clear() } )
-		} else { 
-			if (resultado == 2) {
+		} 
+		else if (resultado == 2) {
 				resultadoPGE.pierde()
-				game.addVisualIn(resultadoPGE,game.at(10,15))	//le aviso al tablero que perdio jugador
+				game.addVisual(resultadoPGE)	//le aviso al tablero que perdio jugador
 				game.schedule( 3000, {	miniGameManager.clear() } )
-			}
-			else {
+		}
+		else {
 				resultadoPGE.empata()
-				game.addVisualIn(resultadoPGE,game.at(10,15))
+				game.addVisual(resultadoPGE)
 				game.schedule(5000, { self.reboot() } )
-			}
 		}
 	}
 	
@@ -268,10 +266,17 @@ class Piedra{
 	
 	method compararCon(opcion){
 		return 
-			if (opcion.valor() == 3){ 1 } //gana 
-			else if (opcion.valor() == 2){ 2 } //pierde  
-				else {	3 } //empata
-	 }
+			if (opcion.valor() == 3){ //gana 
+				1 
+			} 
+			else if (opcion.valor() == 2){ //pierde
+				2
+			}   
+			else {	//empata
+			
+				3
+			} 	 
+	}
 	
 	method activar(){
 		image = "piedra_1.png"		
@@ -289,10 +294,16 @@ class Papel{
 	
 	method compararCon(opcion){
 		return 
-			if (opcion.valor() == 1){ 1 } //gana
-			else if (opcion.valor() == 3){ 2 } //pierde 
-				else { 3 } //empata
-		}
+			if (opcion.valor() == 1){ //gana
+				1
+			} 
+			else if (opcion.valor() == 3){ //pierde
+				2
+			}  
+			else { //empata
+				3
+			} 
+	}
 
 	method activar(){
 		image = "papel_1.png"		
@@ -310,9 +321,15 @@ class Tijera{
 	
 	method compararCon(opcion){
 		return 
-			if (opcion.valor() == 2){ 1 } //gana 
-				else if (opcion.valor() == 1){ 2 } //pierde
-					else { 3 } //empata
+			if (opcion.valor() == 2){ //gana  
+				1
+			} 
+			else if (opcion.valor() == 1){ //pierde 
+				2
+			}
+			else { //empata
+				3
+			} 
 	}
 	method activar(){
 		image = "tijera_1.png"		
@@ -471,11 +488,11 @@ class CorreBondi inherits Minijuego{
 	method procesarResultado(){
 		if (self.estaEnLaMeta(pjBondi)){
 			resultadoPGE.gana() //le aviso al tablero que gano el jugador
-			game.addVisualIn(resultadoPGE,game.at(10,14))
+			game.addVisual(resultadoPGE)
 			game.schedule( 3000, { miniGameManager.clear() } )
 		} else { 
 			resultadoPGE.pierde() //le aviso al tablero que perdio jugador
-			game.addVisualIn(resultadoPGE,game.at(10,14))
+			game.addVisual(resultadoPGE)
 			game.schedule( 3000, { miniGameManager.clear() } )
 		}
 	}
