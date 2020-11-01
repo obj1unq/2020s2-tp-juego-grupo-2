@@ -7,6 +7,11 @@ describe "inicializacion jugadores" {
 	const camino = new Camino()
 
 	fixture{
+		game.clear()
+		
+		game.height(20)
+		game.width(20)
+		
 		camino.construirse(posiciones)
 	}
 	
@@ -37,36 +42,36 @@ describe "inicializacion jugadores" {
 		assert.that(camino.esPartida(jugador.casillaActual()))
 	}
 
-//	test "test un jugador avanza 2 casillas"{
-//		const jugador = new Jugador(camino = camino) 
-//		jugador.inicializar()
-//		jugador.avanzar(2)
-//		assert.that(camino.esLlegada(jugador.casillaActual()))
-//	}
+	test "test un jugador avanza 2 casillas"{
+		const jugador = new Jugador(camino = camino) 
+		jugador.inicializar()
+		jugador.avanzar(2)
+		assert.that(camino.esLlegada(jugador.casillaActual()))
+	}
 	
 	test "test un jugador retorcede 2 casillas"{
 		const jugador = new Jugador(camino = camino) 
 		jugador.inicializar()
 		jugador.avanzar(2)
-		jugador.retroceder(2, 0)
+		jugador.retroceder(2)
 		assert.that(camino.esPartida(jugador.casillaActual()))
 	}
 	
 	test "test un jugador avanza hasta la llegada y retrocede la cantidad restante de movimientos"{
 		const jugador = new Jugador(camino = camino) 
 		jugador.inicializar()
-		jugador.moverse(4)
-		assert.that(camino.esPartida(jugador.casillaActual()))
+		jugador.moverse(3)
+		assert.equals(camino.casillaNumero(1),(jugador.casillaActual()))
 		
 	}
 	
-//		test "test un jugador avanza hasta la llegada"{
-//		const jugador = new Jugador(camino = camino) 
-//		jugador.inicializar()
-//		jugador.moverse(2)
-//		assert.that(camino.esLlegada(jugador.casillaActual()))
-//		
-//	}
+		test "test un jugador avanza hasta la llegada"{
+		const jugador = new Jugador(camino = camino) 
+		jugador.inicializar()
+		jugador.moverse(2)
+		assert.that(camino.esLlegada(jugador.casillaActual()))
+		
+	}
 		
 
 }

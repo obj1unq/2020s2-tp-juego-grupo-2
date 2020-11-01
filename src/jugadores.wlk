@@ -3,6 +3,7 @@ import wollok.game.*
 class Jugador {
 
 	const property camino
+	const posiciones = []
 	const property image = null
 	var property casillaActual = null
 	var property position = null
@@ -14,29 +15,45 @@ class Jugador {
 
 	method avanzar() {
 		casillaActual = camino.siguienteA(casillaActual)
-		position = casillaActual.ubicacion()
+//		position = casillaActual.ubicacion()
 	}
 
 	method retroceder() {
 		casillaActual = camino.anteriorA(casillaActual)
-		position = casillaActual.ubicacion()
+//		position = casillaActual.ubicacion()
 	}
 
+//	method avanzar(cantidad) {
+//		var tiempoActual = 0
+//		cantidad.times({ i =>
+//			game.schedule(tiempoActual, { self.avanzar()})
+//			tiempoActual += 500
+//		})
+//	}
+	
 	method avanzar(cantidad) {
-		var tiempoActual = 0
 		cantidad.times({ i =>
-			game.schedule(tiempoActual, { self.avanzar()})
-			tiempoActual += 500
+			self.avanzar()
+			posiciones.add(casillaActual.ubicacion())
 		})
 	}
 
-	method retroceder(cantidad, tiempo) {
-		var tiempoActual = tiempo
+//	method retroceder(cantidad, tiempo) {
+//		var tiempoActual = tiempo
+//		cantidad.times({ i =>
+//			game.schedule(tiempoActual, { self.retroceder()})
+//			tiempoActual += 500
+//		})
+//	}
+	
+	method retroceder(cantidad) {
 		cantidad.times({ i =>
-			game.schedule(tiempoActual, { self.retroceder()})
-			tiempoActual += 500
+			self.retroceder()
+			posiciones.add(casillaActual.ubicacion())
 		})
 	}
+	
+	
 
 	method moverse(movimientos) {
 		var tiempoActual = 0
@@ -45,10 +62,20 @@ class Jugador {
 			const retroceso = movimientos - hastaLlegada
 			tiempoActual = hastaLlegada * 500 
 			self.avanzar(hastaLlegada)
-			self.retroceder(retroceso, tiempoActual)
+			self.retroceder(retroceso)
+			self.animarMovimiento()
 		} else {
 			self.avanzar(movimientos)
+			self.animarMovimiento()
 		}
+		posiciones.clear()
+	}
+	
+	method animarMovimiento(){
+		var tiempo = 0
+		posiciones.forEach({posicion =>
+			game.schedule(tiempo, {position = posicion})
+			tiempo += 500
+		})			
 	}
 }
-
