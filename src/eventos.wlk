@@ -71,15 +71,18 @@ object resultadoPGE {
 	var property position = game.at(10,15)
 	
 	method gana() {
-		image = "silvio_ganaste.png" 	
+		image = "silvio_ganaste.png"
+		game.sound("sonidos/win.mp3").play() 	
 	}
 
 	method pierde() {
-		image = "silvio_perdiste.png"	
+		image = "silvio_perdiste.png"
+		game.sound("sonidos/lose.mp3").play()	
 	}
 
 	method empata() {
 		image = "silvio_empate.png"
+		game.sound("sonidos/empate.mp3").play()
 	}	
 }
 
@@ -270,6 +273,15 @@ class PPT inherits MinijuegoConSelector{
 		//Arranco el contador y empieza el juego
 		self.startCountDown()
 	}
+	
+	override method keyRight(){
+		super()
+		game.sound("sonidos/move.mp3").play()
+	}
+	override method keyLeft(){
+		super()
+		game.sound("sonidos/move.mp3").play()
+	}
 
 	method timeOut(){
 		self.seleccionOff()
@@ -417,7 +429,7 @@ class PYR inherits MinijuegoConSelector{
 		} else { 
 			resultadoPYR.pierde()
 			game.addVisual(resultadoPYR) //le aviso al tablero que gano jugador
-			game.schedule( 3000, { miniGameManager.clear() } )
+			game.schedule( 4000, { miniGameManager.clear() } )
 		}
 	}
 	
@@ -448,6 +460,14 @@ class PYR inherits MinijuegoConSelector{
 		game.removeVisual(resultadoPYR)
 		opciones.forEach({ opcion => game.removeVisual(opcion) })
 	}
+	override method keyDown(){
+		super()
+		game.sound("sonidos/move.mp3").play()
+	}
+	override method keyUp(){
+		super()
+		game.sound("sonidos/move.mp3").play()
+	}
 }
 
 class Pregunta {
@@ -465,9 +485,11 @@ object resultadoPYR{
 
 	method gana() {
 		image = "respuesta_correcta.png"
+		game.sound("sonidos/sabes_que_si.mp3").play()
 	}
 	method pierde() {
 		image = "respuesta_incorrecta.png"
+		game.sound("sonidos/esta_mal.mp3").play()
 	}
 }
 
