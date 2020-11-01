@@ -78,4 +78,9 @@ class Jugador {
 			tiempo += 500
 		})			
 	}
+	
+	method movimientoCompleto(movimientos){
+		self.moverse(movimientos)
+		casillaActual.activarEventoPara(self)
+	}
 }

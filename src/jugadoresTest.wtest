@@ -1,3 +1,4 @@
+import eventos.*
 import wollok.game.*
 import camino.*
 import jugadores.*
@@ -5,74 +6,79 @@ import jugadores.*
 describe "inicializacion jugadores" {
 	const posiciones = [game.at(10,10),game.at(10,12),game.at(10,14)]
 	const camino = new Camino()
+	const jugador = new Jugador(camino = camino)
 
 	fixture{
-		game.clear()
-		
-		game.height(20)
-		game.width(20)
-		
 		camino.construirse(posiciones)
+		jugador.inicializar() 
+		
 	}
 	
 	test "test un jugador inicia en la partida del camino" {
-		const jugador = new Jugador(camino = camino)
-		jugador.inicializar() 
 		assert.equals(jugador.casillaActual(), camino.partida())
 	}
 	
 	test "test un jugador esta posicionado en la partida del camino" {
-		const jugador = new Jugador(camino = camino) 
-		jugador.inicializar()
 		assert.equals(camino.casillaEn(jugador.position()), camino.partida())
 	}
 	
 	test "test un jugador avanza una casilla"{
-		const jugador = new Jugador(camino = camino) 
-		jugador.inicializar()
 		jugador.avanzar()
 		assert.notThat(camino.esPartida(jugador.casillaActual()))
 	}
 	
 	test "test un jugador avanza y retrocede una casilla"{
-		const jugador = new Jugador(camino = camino) 
-		jugador.inicializar()
 		jugador.avanzar()
 		jugador.retroceder()
 		assert.that(camino.esPartida(jugador.casillaActual()))
 	}
 
 	test "test un jugador avanza 2 casillas"{
-		const jugador = new Jugador(camino = camino) 
-		jugador.inicializar()
 		jugador.avanzar(2)
 		assert.that(camino.esLlegada(jugador.casillaActual()))
 	}
 	
 	test "test un jugador retorcede 2 casillas"{
-		const jugador = new Jugador(camino = camino) 
-		jugador.inicializar()
 		jugador.avanzar(2)
 		jugador.retroceder(2)
 		assert.that(camino.esPartida(jugador.casillaActual()))
 	}
 	
 	test "test un jugador avanza hasta la llegada y retrocede la cantidad restante de movimientos"{
-		const jugador = new Jugador(camino = camino) 
-		jugador.inicializar()
 		jugador.moverse(3)
 		assert.equals(camino.casillaNumero(1),(jugador.casillaActual()))
 		
 	}
 	
-		test "test un jugador avanza hasta la llegada"{
-		const jugador = new Jugador(camino = camino) 
-		jugador.inicializar()
+	test "test un jugador avanza hasta la llegada"{
 		jugador.moverse(2)
 		assert.that(camino.esLlegada(jugador.casillaActual()))
 		
 	}
 		
+	test "test jugador recibe un premio en la casilla destino y avanza 2 casillas mas"{
+		const pos = [game.at(10,10),game.at(10,12),game.at(10,14),game.at(10,16),game.at(10,18)]		
+		const caminoLargo = new Camino()
+		const premio = new Recompensa()
+		caminoLargo.construirse(pos)
+		caminoLargo.poner_En(premio, 2)
+		const jugador1 = new Jugador(camino = caminoLargo)
+		jugador1.inicializar()
+		jugador1.movimientoCompleto(2)
+		assert.equals(caminoLargo.casillaNumero(4), jugador1.casillaActual())		
+		}
+
+	test "test jugador recibe un castigo en la casilla destino y retrocede 2 casillas"{
+		const pos = [game.at(10,10),game.at(10,12),game.at(10,14),game.at(10,16),game.at(10,18)]		
+		const caminoLargo = new Camino()
+		const castigo = new Castigo()
+		caminoLargo.construirse(pos)
+		caminoLargo.poner_En(castigo, 4)
+		const jugador1 = new Jugador(camino = caminoLargo)
+		jugador1.inicializar()
+		jugador1.movimientoCompleto(4)
+		assert.equals(caminoLargo.casillaNumero(2), jugador1.casillaActual())		
+		}
 
 }
 

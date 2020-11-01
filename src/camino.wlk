@@ -47,11 +47,16 @@ class Camino {
 		return self.casillaNumero(posicionAnterior)
 	}
 	
+	method poner_En(evento, numCasilla){
+		self.casillaNumero(numCasilla).asignarEvento(evento)
+	}
+	
 }
 
 class Casilla {
 
 	const property numero
+	var property evento = 2
 	const position
 
 	method representacion() {
@@ -76,6 +81,14 @@ class Casilla {
 	
 	method distanciaA(_casillaDestino){
 		return (_casillaDestino.numero() - self.numero()).abs()
+	}
+
+	method asignarEvento(_evento){
+		evento = _evento
+	}
+	
+	method activarEventoPara(unJugador){
+		evento.activarPara(unJugador)
 	}
 
 }

@@ -624,3 +624,25 @@ object bondi {
 	var property image = "bondi.png"
 	var property position = game.at(-10,-10)
 }
+
+class Recompensa {
+	const movimientos = 2
+	
+	method activarPara(unJugador){
+		unJugador.avanzar(movimientos)
+		unJugador.animarMovimiento()
+	}
+}
+
+
+class Castigo {
+	const movimientos = 2
+	
+	method activarPara(unJugador){
+		unJugador.retroceder(movimientos)
+		unJugador.animarMovimiento()
+	}
+
+}
+
+
