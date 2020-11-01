@@ -63,12 +63,17 @@ class Jugador {
 			tiempoActual = hastaLlegada * 500 
 			self.avanzar(hastaLlegada)
 			self.retroceder(retroceso)
+			self.activarEvento()
 			self.animarMovimiento()
 		} else {
 			self.avanzar(movimientos)
+			self.activarEvento()
 			self.animarMovimiento()
 		}
-		posiciones.clear()
+	}
+	
+	method activarEvento(){
+		casillaActual.activarEventoPara(self)
 	}
 	
 	method animarMovimiento(){
@@ -77,10 +82,7 @@ class Jugador {
 			game.schedule(tiempo, {position = posicion})
 			tiempo += 500
 		})			
+		posiciones.clear()
 	}
 	
-	method movimientoCompleto(movimientos){
-		self.moverse(movimientos)
-		casillaActual.activarEventoPara(self)
-	}
 }
