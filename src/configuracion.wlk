@@ -3,6 +3,7 @@ import eventos.*
 import sistemaDeTurnos.*
 import camino.*
 import jugadores.*
+import juego.*
 
 
 object configurar {
@@ -36,20 +37,22 @@ object configurar {
 			turno.agregarPersonaje(jugador1)})
 		keyboard.c().onPressDo({ game.say(jugador1, jugador1.position())})	
 	
-			// Minijuegos
+		// Minijuegos
 		keyboard.up().onPressDo({ miniGameManager.keyUp()})
 		keyboard.down().onPressDo({ miniGameManager.keyDown()})
 		keyboard.left().onPressDo({ miniGameManager.keyLeft()})
 		keyboard.right().onPressDo({ miniGameManager.keyRight()})
-		keyboard.s().onPressDo({ miniGameManager.load(miniGameFactory.ppt())
-			miniGameManager.start()
-		})
-		keyboard.d().onPressDo({ miniGameManager.load(miniGameFactory.pyr())
-			miniGameManager.start()
-		})
-		keyboard.a().onPressDo({ miniGameManager.load(miniGameFactory.correBondi())
-			miniGameManager.start()
-		})
+		keyboard.s().onPressDo({ miniGameManager.load(	miniGameFactory.ppt())
+														miniGameManager.start() })
+		keyboard.d().onPressDo({ miniGameManager.load(	miniGameFactory.pyr())
+														miniGameManager.start() })
+		keyboard.a().onPressDo({ miniGameManager.load(	miniGameFactory.correBondi())
+														miniGameManager.start() })
+		//Fin Del Juego
+		
+		keyboard.q().onPressDo( { finDelJuego.salir()} )
+		keyboard.enter().onPressDo( { finDelJuego.volverAjugar() } )
+		keyboard.p().onPressDo( { finDelJuego.ganador(1)} )
 	}
 
 }

@@ -68,7 +68,7 @@ object miniGameFactory{
 
 object resultadoPGE {
 	var property image = "resultadoGana.png"
-	var property position = game.at(10,15)
+	var property position = game.at(10,11)
 	
 	method gana() {
 		image = "silvio_ganaste.png" 	
@@ -120,6 +120,20 @@ class Minijuego {
 	method keyDown(){ /*Sin uso*/	}
 	method keyLeft(){ /*Sin uso*/	}
 	method keyRight(){ /*Sin uso*/	}
+
+	method procesarResultado(gano, objResultado){
+		if (gano){
+			game.sound("sonidos/win.mp3").play()
+			objResultado.gana() //le aviso al tablero que gano el jugador
+			game.addVisual(objResultado)
+			game.schedule( 3000, { miniGameManager.clear() } )
+		} else { 
+			game.sound("sonidos/lose.mp3").play()
+			objResultado.pierde() //le aviso al tablero que perdio jugador
+			game.addVisual(objResultado)
+			game.schedule( 3000, { miniGameManager.clear() } )
+		}
+	}
 
 	method image()
 	method start()
@@ -220,22 +234,15 @@ class PPT inherits MinijuegoConSelector{
 		self.startCountDown()
 	}
 	
-	method procesarResultado(resultado){
-		if (resultado == 1){
-			resultadoPGE.gana()
-			game.addVisualIn(resultadoPGE,game.at(10,11)) //le aviso al tablero que gano jugador
-			game.schedule( 3000, { miniGameManager.clear() } )
-		} 
-		else if (resultado == 2) {
-				resultadoPGE.pierde()
-				game.addVisualIn(resultadoPGE,game.at(10,11))	//le aviso al tablero que perdio jugador
-				game.schedule( 3000, { miniGameManager.clear() } )
-		}
-		else {
-				resultadoPGE.empata()
-				game.addVisualIn(resultadoPGE,game.at(10,11))
+	method procesarResultadoPPT(resultadoPPT, objResultado){
+		if (resultadoPPT == 3) {
+				objResultado.empata()
+				game.addVisual(objResultado)
 				game.schedule( 3000, { self.reboot() } )
+		} else {
+			self.procesarResultado(resultadoPPT == 1, objResultado)
 		}
+		
 	}
 	
 	method startCountDown(){
@@ -276,7 +283,7 @@ class PPT inherits MinijuegoConSelector{
 		eleccionMaquina = self.elegirMaquina()
 		const eleccionJugador = opcionesJugador.get(index)
 		game.schedule( 1000, { eleccionMaquina.activar() })
-		game.schedule( 1500, { self.procesarResultado(eleccionJugador.compararCon(eleccionMaquina))	} )
+		game.schedule( 1500, { self.procesarResultadoPPT(eleccionJugador.compararCon(eleccionMaquina), resultadoPGE)	} )
 	}
 
 	override method clear(){
@@ -409,18 +416,6 @@ class PYR inherits MinijuegoConSelector{
 		return opciones
 	}
 
-	method procesarResultado(valorRespuestaElegida){
-		if (valorRespuestaElegida){
-			resultadoPYR.gana()
-			game.addVisual(resultadoPYR) //le aviso al tablero que gano jugador
-			game.schedule( 3000, { miniGameManager.clear() } )
-		} else { 
-			resultadoPYR.pierde()
-			game.addVisual(resultadoPYR) //le aviso al tablero que gano jugador
-			game.schedule( 3000, { miniGameManager.clear() } )
-		}
-	}
-	
 	override method start(){
 		//configuro el selector
 		self.selectorVertical()
@@ -440,7 +435,7 @@ class PYR inherits MinijuegoConSelector{
 
 	method timeOut(){
 		self.seleccionOff()
-		self.procesarResultado( pregunta.valorRespuestas().get(index) )
+		self.procesarResultado( pregunta.valorRespuestas().get(index), resultadoPYR )
 	}
 
 	override method clear(){
@@ -526,18 +521,6 @@ class CorreBondi inherits Minijuego{
 		return _personaje.position().y() >= bondi.position().y()
 	}
 
-	method procesarResultado(){
-		if (self.estaEnLaMeta(pjBondi)){
-			resultadoPGE.gana() //le aviso al tablero que gano el jugador
-			game.addVisualIn(resultadoPGE,game.at(10,11))
-			game.schedule( 3000, { miniGameManager.clear() } )
-		} else { 
-			resultadoPGE.pierde() //le aviso al tablero que perdio jugador
-			game.addVisualIn(resultadoPGE,game.at(10,11))
-			game.schedule( 3000, { miniGameManager.clear() } )
-		}
-	}
-	
 	override method start(){
 		bondi.position(game.at(13, 22))
 		bondi.image("bondi.png")
@@ -559,7 +542,7 @@ class CorreBondi inherits Minijuego{
 			time = time + 100
 		}
 		game.schedule(time + 100, { bondi.image("vacio.png")
-								self.procesarResultado() } )	
+								self.procesarResultado(self.estaEnLaMeta(pjBondi), resultadoPGE) } )	
 	}
 
 	method timeOut(){
