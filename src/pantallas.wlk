@@ -1,27 +1,44 @@
 import wollok.game.*
 
+object inicioDelJuego {
+	
+}
 
 object finDelJuego {
+	var opcionesActivo = false
 	
 	method ganador(numero){
 		imagenGanador.ganador(numero)
 		game.addVisual(imagenGanador)
 		game.onTick(1000, "opcionesFin", { opcionesFin.cambiarImagen() })
 		game.addVisual(opcionesFin)
+		self.activarOpciones()
 	}
 	
 	method volverAjugar(){
-		game.removeVisual(imagenGanador)
-		game.removeVisual(opcionesFin)
-		game.removeTickEvent("opcionesFin")
-		
-		//aca va como reiniciar
-
+		if (opcionesActivo) {
+			game.removeVisual(imagenGanador)
+			game.removeVisual(opcionesFin)
+			game.removeTickEvent("opcionesFin")
+			self.desactivarOpciones()
+			//aca va como reiniciar
+		}
 	}
 	
 	method salir(){
-		game.stop()
+		if (opcionesActivo)	{
+			game.stop()
+		}
 	}
+
+	method activarOpciones(){
+		opcionesActivo = true
+	}
+
+	method desactivarOpciones(){
+		opcionesActivo = false
+	}
+
 
 }
 

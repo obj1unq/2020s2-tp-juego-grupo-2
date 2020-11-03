@@ -50,13 +50,20 @@ object miniGameFactory{
 		return new PPT()
 	}
 	
-	method pyr(){
-		const _pregunta = new Pregunta (image = "p_pe.png", valorRespuestas = [false, true, false])
+	method pyr(_pregunta){
 		return new PYR( pregunta = _pregunta, image = _pregunta.image()  )
 	}
 	
 	method correBondi(){
 		return new CorreBondi()		
+	}
+}
+
+object preguntasFactory{
+
+	method nueva(_image, _valorRespuestas){
+		return 	new Pregunta (image = _image, valorRespuestas = _valorRespuestas)
+		
 	}
 }
 
@@ -71,15 +78,18 @@ object resultadoPGE {
 	var property position = game.at(10,11)
 	
 	method gana() {
-		image = "silvio_ganaste.png" 	
+		image = "silvio_ganaste.png"
+		game.sound("sonidos/win.mp3").play() 	
 	}
 
 	method pierde() {
-		image = "silvio_perdiste.png"	
+		image = "silvio_perdiste.png"
+		game.sound("sonidos/lose.mp3").play()	
 	}
 
 	method empata() {
 		image = "silvio_empate.png"
+		game.sound("sonidos/empate.mp3").play()
 	}	
 }
 
@@ -135,7 +145,6 @@ class Minijuego {
 		}
 	}
 
-	method image()
 	method start()
 	method clear()
 }
@@ -170,28 +179,28 @@ class MinijuegoConSelector inherits Minijuego{
 		seleccionActivo = false
 	}
 	
-	override method keyLeft(){
-		if (seleccionActivo and seleccionHorizontal) {
-			self.seleccionarOpcion(-1)
+	method seleccionarOpcionSiActivo(opcion, movimientoAchequear){
+		if (seleccionActivo and movimientoAchequear) {
+			self.seleccionarOpcion(opcion)
+			game.sound("sonidos/move.mp3").play()
 		}
+		
+	}
+	
+	override method keyLeft(){
+		self.seleccionarOpcionSiActivo(-1, seleccionHorizontal)
 	}
 	
 	override method keyRight(){
-		if (seleccionActivo and seleccionHorizontal) {
-			self.seleccionarOpcion(1)
-		}
+		self.seleccionarOpcionSiActivo(1, seleccionHorizontal)
 	}
 	
 	override method keyUp(){
-		if (seleccionActivo and seleccionVertical) { 
-			self.seleccionarOpcion(1)
-		}
+		self.seleccionarOpcionSiActivo(1, seleccionVertical)
 	}
 	
 	override method keyDown(){
-		if (seleccionActivo and seleccionVertical) { 
-			self.seleccionarOpcion(-1)
-		}
+		self.seleccionarOpcionSiActivo(-1, seleccionVertical)
 	}
 	
 	method seleccionarOpcion(movimientoX){
@@ -277,13 +286,13 @@ class PPT inherits MinijuegoConSelector{
 		//Arranco el contador y empieza el juego
 		self.startCountDown()
 	}
-
+	
 	method timeOut(){
 		self.seleccionOff()
 		eleccionMaquina = self.elegirMaquina()
 		const eleccionJugador = opcionesJugador.get(index)
 		game.schedule( 1000, { eleccionMaquina.activar() })
-		game.schedule( 1500, { self.procesarResultadoPPT(eleccionJugador.compararCon(eleccionMaquina), resultadoPGE)	} )
+		game.schedule( 1500, { self.procesarResultadoPPT(eleccionJugador.compararCon(eleccionMaquina), resultadoPGE) } )
 	}
 
 	override method clear(){
@@ -416,6 +425,18 @@ class PYR inherits MinijuegoConSelector{
 		return opciones
 	}
 
+	method procesarResultado(valorRespuestaElegida){
+		if (valorRespuestaElegida){
+			resultadoPYR.gana()
+			game.addVisual(resultadoPYR) //le aviso al tablero que gano jugador
+			game.schedule( 3000, { miniGameManager.clear() } )
+		} else { 
+			resultadoPYR.pierde()
+			game.addVisual(resultadoPYR) //le aviso al tablero que gano jugador
+			game.schedule( 4000, { miniGameManager.clear() } )
+		}
+	}
+	
 	override method start(){
 		//configuro el selector
 		self.selectorVertical()
@@ -460,9 +481,11 @@ object resultadoPYR{
 
 	method gana() {
 		image = "respuesta_correcta.png"
+		game.sound("sonidos/sabes_que_si.mp3").play()
 	}
 	method pierde() {
 		image = "respuesta_incorrecta.png"
+		game.sound("sonidos/esta_mal.mp3").play()
 	}
 }
 
@@ -606,4 +629,24 @@ object pjBondi {
 object bondi {
 	var property image = "bondi.png"
 	var property position = game.at(-10,-10)
+}
+
+class Recompensa {
+	const movimientos = 2
+	
+	method activarPara(unJugador){
+		unJugador.avanzar(movimientos)
+		unJugador.animarMovimiento()
+	}
+}
+
+
+class Castigo {
+	const movimientos = 2
+	
+	method activarPara(unJugador){
+		unJugador.retroceder(movimientos)
+		unJugador.animarMovimiento()
+	}
+
 }

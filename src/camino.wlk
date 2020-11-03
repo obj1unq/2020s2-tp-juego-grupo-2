@@ -1,13 +1,10 @@
 import wollok.game.*
+import eventos.*
 
 //boceteando el camino
 class Camino {
 
 	const property casillas = []
-
-	method inicializar(posiciones){
-		self.construirse(posiciones)
-	}
 
 	method construirse(_posiciones) {
 		var _numero = 0
@@ -51,11 +48,24 @@ class Camino {
 		return self.casillaNumero(posicionAnterior)
 	}
 	
+	method poner_En(evento, numCasilla){
+		self.casillaNumero(numCasilla).asignarEvento(evento)
+	}
+	
+	method generarPremios(numerosCasillas){
+		numerosCasillas.forEach({numero => self.poner_En(new Recompensa(), numero)})
+	}
+	
+	method generarCastigos(numerosCasillas){
+		numerosCasillas.forEach({numero => self.poner_En(new Castigo(), numero)})
+	}
+	
 }
 
 class Casilla {
 
 	const property numero
+	var property evento = null
 	const position
 
 	method representacion() {
@@ -80,6 +90,21 @@ class Casilla {
 	
 	method distanciaA(_casillaDestino){
 		return (_casillaDestino.numero() - self.numero()).abs()
+	}
+
+	method asignarEvento(_evento){
+		evento = _evento
+	}
+	
+	method activarEventoPara(unJugador){
+		if (self.tieneEvento()){
+		evento.activarPara(unJugador)			
+		}
+	}
+	
+
+	method tieneEvento() {
+		return evento != null
 	}
 
 }

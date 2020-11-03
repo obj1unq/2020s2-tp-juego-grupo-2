@@ -6,6 +6,5 @@ program game {
 	
 	tutorial.iniciar()
 
-	
 	game.start()
 }

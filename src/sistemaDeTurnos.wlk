@@ -28,7 +28,6 @@ object turno {
 	method tirarDados() {
 		const movimiento = dado.serLanzado()
 		const jugador = self.jugadorActivo()
-		// jugador.movimientoCompleto(movimiento)
 		game.schedule(2500, { jugador.moverse(movimiento)})
 		self.pasar()
 	}
