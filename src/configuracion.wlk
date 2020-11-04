@@ -49,11 +49,17 @@ object configurar {
 		const pe  = preguntasFactory.nueva("p_pe.png",  [false, true, false])
 		const lh  = preguntasFactory.nueva("p_lh.png",  [false, false, true])
 		const alf = preguntasFactory.nueva("p_alf.png", [true, false, false])
+		const gu  = preguntasFactory.nueva("p_gu.png",  [false, true, false])
+		const mo  = preguntasFactory.nueva("p_mo.png",  [true, false, false])
+		const io  = preguntasFactory.nueva("p_io.png",  [false, false, true])
+		const ba  = preguntasFactory.nueva("p_ba.png",  [false, true, false])
+		const ri  = preguntasFactory.nueva("p_ri.png",  [true, false, false])
+		
+		const listPYR = [pe,lh,alf,gu,mo,io,ba,ri]
+
 		
 		keyboard.s().onPressDo({ miniGameManager.load( miniGameFactory.ppt()) miniGameManager.start() })
-		keyboard.d().onPressDo({ miniGameManager.load( miniGameFactory.pyr(pe) ) miniGameManager.start() })
-		keyboard.e().onPressDo({ miniGameManager.load( miniGameFactory.pyr(lh) ) miniGameManager.start() })
-		keyboard.f().onPressDo({ miniGameManager.load( miniGameFactory.pyr(alf) ) miniGameManager.start() })
+		keyboard.d().onPressDo({ miniGameManager.load( miniGameFactory.pyr(listPYR.anyOne()) ) miniGameManager.start() })
 		keyboard.a().onPressDo({ miniGameManager.load( miniGameFactory.correBondi()) miniGameManager.start() })
 
 		//Fin Del Juego
