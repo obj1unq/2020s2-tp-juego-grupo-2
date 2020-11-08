@@ -8,7 +8,8 @@ object tutorial {
 		"sonidos/soda_stereo.mp3"]
 		
 	method iniciar(){
-		configurar.tablero()
+		configurar.board()
+		configurar.juego()
 		configurar.teclas()
 		
 		game.schedule(0, {game.sound(music.anyOne()).play()})

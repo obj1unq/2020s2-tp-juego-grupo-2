@@ -8,7 +8,7 @@ class Jugador {
 	var property casillaActual = null
 	var property position = null
 
-	method inicializar() {
+	override method initialize() {
 		casillaActual = camino.partida()
 		position = casillaActual.ubicacion()
 	}
@@ -53,8 +53,6 @@ class Jugador {
 		})
 	}
 	
-	
-
 	method moverse(movimientos) {
 		var tiempoActual = 0
 		const hastaLlegada = casillaActual.distanciaA(camino.llegada())
@@ -63,17 +61,16 @@ class Jugador {
 			tiempoActual = hastaLlegada * 500 
 			self.avanzar(hastaLlegada)
 			self.retroceder(retroceso)
-			self.activarEvento()
 			self.animarMovimiento()
 		} else {
 			self.avanzar(movimientos)
-			self.activarEvento()
 			self.animarMovimiento()
 		}
+		game.schedule(500 * movimientos, { self.activarEvento() })
 	}
 	
 	method activarEvento(){
-		casillaActual.activarEventoPara(self)
+		casillaActual.activarEvento()
 	}
 	
 	method animarMovimiento(){

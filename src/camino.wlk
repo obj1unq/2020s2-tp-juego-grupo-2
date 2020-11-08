@@ -1,5 +1,6 @@
 import wollok.game.*
 import eventos.*
+import sistemaDeTurnos.*
 
 //boceteando el camino
 class Camino {
@@ -96,13 +97,15 @@ class Casilla {
 		evento = _evento
 	}
 	
-	method activarEventoPara(unJugador){
+	method activarEvento(){
 		if (self.tieneEvento()){
-		evento.activarPara(unJugador)			
+		evento.activar()			
+		}
+		else {
+			evento_finalizarTurno.activar()
 		}
 	}
 	
-
 	method tieneEvento() {
 		return evento != null
 	}

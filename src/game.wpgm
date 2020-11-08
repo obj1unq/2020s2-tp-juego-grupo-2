@@ -1,9 +1,12 @@
 import wollok.game.*
 import pruebaInicio.*
+import eventos.*
 
 program game {
-	game.title("El Juego De La Boca")
+	game.title("El juego de las estrellas de Cronica")
 	
+	game.addVisual(evento_inicioDelJuego)
+
 	tutorial.iniciar()
 
 	game.start()
