@@ -9,16 +9,17 @@ object tutorial {
 		"sonidos/b_soda.wav"]
 
     var index = 0
-    var track = game.sound(music.get(index))
+    var track = game.sound(music.anyOne())
  
  
     
     method listaDeTemas(){
         
+        self.mezclarTemas()
         track.shouldLoop(true)
         track.play() 
-        game.schedule(180000, {track.stop()})
-        game.onTick(180000,"Inicio",{
+        game.schedule(18000, {track.stop()})
+        game.onTick(18000,"Inicio",{
             
             if (track.played()) {
                 track.stop()
@@ -28,14 +29,22 @@ object tutorial {
             
         } )
        
-        
-       
     }
     
     method next(){
 
         index = (index + 1) % music.size()
         track = game.sound(music.get(index))
+    }
+    
+     method mezclarTemas(){
+        const listadoTemporal = []
+        music.size().times( { i => 
+            const temaActual = music.anyOne()
+            listadoTemporal.add(temaActual) 
+            music.remove(temaActual)
+        } )
+        music = listadoTemporal
     }
 
 		
