@@ -33,7 +33,7 @@ object configurar {
 
 	method board() {
 		//Configuracion del tablero de wollok
-		game.height(32) // 20
+		game.height(28) // 20
 		game.width(30) // 15
 		game.cellSize(30) // 50
 		game.boardGround("tablero_01.jpg")
