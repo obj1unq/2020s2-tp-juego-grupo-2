@@ -6,7 +6,7 @@ object tutorial {
 
 	var property music = ["sonidos/b_bersuit.wav", "sonidos/b_damas_gratis_humo.wav", "sonidos/b_damas_gratis_laura.mp3",
 		"sonidos/b_la_renga_rebelde.mp3", "sonidos/b_matador.wav", "sonidos/b_pibe_cantina.wav", "sonidos/b_soda_stereo_persiana_americana.wav",
-		"sonidos/b_soda_stereo.wav"]
+		"sonidos/b_soda.wav"]
 
     var index = 0
     var track = game.sound(music.get(index))
