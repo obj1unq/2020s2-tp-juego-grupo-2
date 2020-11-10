@@ -157,7 +157,7 @@ object evento_FinDelTurno {
 object evento_finDelJuego inherits Opciones {
 	
 	method activar(){
-		game.sound("sonidos/llegada_0.mp3").play()
+		game.sound("sonidos/himno.mp3").play()
 		imagenGanador.ganador(turno.numeroJugadorActivo())
 		game.addVisual(imagenGanador)
 		game.onTick(1000, "opcionesFin", { opcionesFin.cambiarImagen() })
