@@ -10,31 +10,50 @@ object tutorial {
 
     var index = 0
     var track = game.sound(music.anyOne())
- 
+ 	const time = 180000
  
     
     method listaDeTemas(){
         
         self.mezclarTemas()
         track.shouldLoop(true)
-        track.play() 
-        game.schedule(18000, {track.stop()})
-        game.onTick(18000,"Inicio",{
+        track.play()
+        self.fadeOut()
+        track.volume(1)
+        game.onTick(time,"Inicio",{
             
             if (track.played()) {
-                track.stop()
+            	
+            	self.fadeOut()
+            	track.volume(1)
                 self.next()
                 track.play()
+                
             }else{track.play()}
             
         } )
        
     }
     
+    method fadeOut() {
+    	
+    	self.bajarVolumen()
+        game.schedule(time, { track.stop() })
+    }
+    
+    method bajarVolumen() {
+    	game.schedule(time - 5000, {track.volume(0.5)})
+    	game.schedule(time - 4000, {track.volume(0.4)})
+    	game.schedule(time - 3000, {track.volume(0.3)})
+    	game.schedule(time - 2000, {track.volume(0.2)})
+    	game.schedule(time - 1000, {track.volume(0.1)})
+    }
+    
     method next(){
-
+		
         index = (index + 1) % music.size()
         track = game.sound(music.get(index))
+
     }
     
      method mezclarTemas(){
