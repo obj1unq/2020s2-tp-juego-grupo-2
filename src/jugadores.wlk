@@ -82,4 +82,8 @@ class Jugador {
 		posiciones.clear()
 	}
 	
+	method estaEnLaMeta(){
+		return camino.esLlegada(casillaActual)
+	}
+	
 }

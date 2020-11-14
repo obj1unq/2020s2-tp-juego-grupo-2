@@ -1,6 +1,7 @@
 import wollok.game.*
 import minijuegos.*
 import sistemaDeTurnos.*
+import pruebaInicio.*
 
 
 /*----------------------------------------------------------------------------------------
@@ -12,8 +13,8 @@ import sistemaDeTurnos.*
 object evento_finalizarTurno {
 
 	method activar(){
-		game.addVisual(evento_FinDelTurno)
-		game.schedule(1500,{ game.removeVisual(evento_FinDelTurno)
+		game.addVisual(evento_finDelTurno)
+		game.schedule(1500,{ game.removeVisual(evento_finDelTurno)
 								 turno.pasar()
 								 tablero.activar() })
 	}
@@ -91,7 +92,12 @@ class Recompensa {
 	method activar(){
 		turno.jugadorActivo().avanzar(movimientos)
 		turno.jugadorActivo().animarMovimiento()	
-		game.schedule(500 * movimientos, { turno.jugadorActivo().activarEvento() })
+		if (turno.jugadorActivo().estaEnLaMeta()) {
+			game.schedule(500 * movimientos, { evento_finDelJuego.activar() })			
+		}
+		else {
+			game.schedule(500 * movimientos, { evento_finalizarTurno.activar() })
+		}
 	}
 }
 
@@ -102,7 +108,7 @@ class Castigo {
 	method activar(){
 		turno.jugadorActivo().retroceder(movimientos)
 		turno.jugadorActivo().animarMovimiento()
-		game.schedule(500 * movimientos, { turno.jugadorActivo().activarEvento() })
+		game.schedule(500 * movimientos, { evento_finalizarTurno.activar() })	
 	}
 
 }
@@ -149,15 +155,18 @@ object evento_inicioDelJuego inherits Opciones {
 }
 
 
-object evento_FinDelTurno {
+object evento_finDelTurno {
 	var property image = "fin_del_turno.png"
 	const property position = game.at(0,0)
 }
 
 object evento_finDelJuego inherits Opciones {
+	const himno = game.sound("sonidos/himno.mp3")
 	
 	method activar(){
-		game.sound("sonidos/himno.mp3").play()
+		musica.stop()
+		himno.shouldLoop(true)
+		himno.play()
 		imagenGanador.ganador(turno.numeroJugadorActivo())
 		game.addVisual(imagenGanador)
 		game.onTick(1000, "opcionesFin", { opcionesFin.cambiarImagen() })
@@ -174,6 +183,9 @@ object evento_finDelJuego inherits Opciones {
 			//Reinicio el tablero
 			turno.reiniciarSistemaDeTurnos()
 			tablero.activar()
+			//Reinicio la musica
+			himno.stop()
+			musica.iniciar()
 		}
 	}
 	
