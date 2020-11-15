@@ -26,7 +26,7 @@ object evento_finalizarTurno {
 
 ----------------------------------------------------------------------------------------*/
 
-
+//Evento piedra papel o tijera
 object evento_ppt {
 	
 	method activar(){
@@ -35,6 +35,7 @@ object evento_ppt {
 	}
 }
 
+//Evento preguntas y respuestas
 object evento_pyr {
 	
 	var property preguntas = [
@@ -71,6 +72,7 @@ object evento_pyr {
 	}
 }
 
+//Evento corre el bondi
 object evento_bondi {
 	method activar(){
 		miniGameManager.load(miniGameFactory.correBondi())
@@ -83,8 +85,6 @@ object evento_bondi {
 								Recompensas y castigos
 
 ----------------------------------------------------------------------------------------*/
-
-
 
 class Recompensa {
 	const movimientos = 2
@@ -101,7 +101,6 @@ class Recompensa {
 	}
 }
 
-
 class Castigo {
 	const movimientos = 2
 	
@@ -112,7 +111,6 @@ class Castigo {
 	}
 
 }
-
 
 /*----------------------------------------------------------------------------------------
 	
@@ -149,7 +147,8 @@ object evento_inicioDelJuego inherits Opciones {
 			self.desactivarOpciones()
 			game.removeVisual(self)
 			tablero.activar()
-			game.sound("sonidos/a_jugar.mp3").play()
+			musica.stopCronica()
+			musica.iniciarPlaylist()
 		}
 	}
 }
@@ -164,7 +163,7 @@ object evento_finDelJuego inherits Opciones {
 	const himno = game.sound("sonidos/himno.mp3")
 	
 	method activar(){
-		musica.stop()
+		musica.stopPlaylist()
 		himno.shouldLoop(true)
 		himno.play()
 		imagenGanador.ganador(turno.numeroJugadorActivo())
@@ -185,7 +184,7 @@ object evento_finDelJuego inherits Opciones {
 			tablero.activar()
 			//Reinicio la musica
 			himno.stop()
-			musica.iniciar()
+			musica.iniciarPlaylist()
 		}
 	}
 	

@@ -82,7 +82,8 @@ object configurar {
 
 		//Fin Del Juego
 		keyboard.q().onPressDo( { evento_finDelJuego.salir()} )
-		keyboard.enter().onPressDo( { evento_finDelJuego.volverAjugar() } )
+		keyboard.enter().onPressDo( { evento_finDelJuego.volverAjugar() 
+									   miniGameManager.enter() } )
 //		keyboard.p().onPressDo( { evento_fin.ganador(1) } )
 	}
 

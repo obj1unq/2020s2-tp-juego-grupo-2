@@ -48,6 +48,9 @@ object miniGameManager{
 	method keyRight(){
 		if (self.hasGameLoaded()){ miniGame.keyRight() }
 	}
+	method enter(){
+		if (self.hasGameLoaded()){ miniGame.enter() }
+	}
 }
 
 object miniGameFactory{
@@ -127,20 +130,39 @@ object resultadoGuido_PYR{
 object timer{
 	var property image = "vacio.png"
 	var property position = game.at(14,28)
+	var property running = false
 
 	//Solo admite numeros del 1 al 9
-	method countDown(segundos){
-		image = segundos.toString() + ".png"
-		var time = 1000 * segundos
+	method countdown(segundos){
+		var tickNumber = segundos
+		running = true
+		
+		self.tick(tickNumber)
+		tickNumber --
+		
+		game.onTick(1000, "Countdown", { self.tick(tickNumber)
+										 self.checkEndCountDown(tickNumber) 
+										 tickNumber -- })
+	}
+	
+	method tick(tickNumber){
+		image = (tickNumber).toString() + ".png"
 		game.sound("sonidos/timer.wav").play()
-		segundos.times( { i => 
-			game.schedule(time, { image = (i - 1).toString() + ".png" 
-								  game.sound("sonidos/timer.wav").play()
-			} )
-			time = time - 1000
-		})
 	}
 
+	method checkEndCountDown(tickNumber){
+		if (tickNumber < 1){
+			self.stop()
+			running = false
+		}	
+	}
+	
+	method stop(){
+		if(running){	
+			game.removeTickEvent("Countdown")
+			running = false
+		}
+	}
 }
 
 
@@ -156,6 +178,7 @@ class Minijuego {
 	method keyDown(){ /*Sin uso*/	}
 	method keyLeft(){ /*Sin uso*/	}
 	method keyRight(){ /*Sin uso*/	}
+	method enter(){ /*Sin uso*/	}
 
 	method finalizar(objResultado, eventoResultado){
 			game.addVisual(objResultado)
@@ -234,6 +257,14 @@ class MinijuegoConSelector inherits Minijuego{
 		self.seleccionarOpcionSiActivo(-1, seleccionVertical)
 	}
 	
+	override method enter(){
+		if (timer.running()){
+			self.timeout()
+			timer.stop()	
+			game.sound("sonidos/select.mp3").play()
+		}
+	}
+	
 	method seleccionarOpcion(movimientoX){
 		self.opciones().get(index).desactivar()
 		index = ( index + movimientoX ) % 3
@@ -245,6 +276,7 @@ class MinijuegoConSelector inherits Minijuego{
 	}
 	
 	method opciones()	
+	method timeout()
 }
 
 /*-----------------------------------------------------------------------------------------------------------
@@ -259,6 +291,7 @@ class PPT inherits MinijuegoConSelector{
 	const opcionesJugador = []
 	const opcionesMaquina = []
 	var eleccionMaquina = null
+	const countdownTime = 5
 	
 	override method pantalla() {
 		return pantalla_ppt
@@ -280,13 +313,63 @@ class PPT inherits MinijuegoConSelector{
 		return opcionesMaquina.get((0 .. 2).anyOne())
 	}
 
-	method reboot(){
-		game.removeVisual(resultadoSilvio_PGE)
-		eleccionMaquina.desactivar()
-		self.seleccionOn()
-		self.startCountDown()
+	method prepararOpcionesMaquina(){
+		const piedraMaquina = opcionesFactory.piedra()
+		const papelMaquina = opcionesFactory.papel()
+		const tijeraMaquina = opcionesFactory.tijera()
+		[piedraMaquina, papelMaquina, tijeraMaquina].forEach( { objeto => opcionesMaquina.add(objeto)} )
+
+		game.addVisualIn(piedraMaquina, game.at(6,17))
+		game.addVisualIn(papelMaquina, game.at(12,21))
+		game.addVisualIn(tijeraMaquina, game.at(18,17))
 	}
 	
+	method prepararOpcionesJugador(){
+		const piedraJugador = opcionesFactory.piedra()
+		const papelJugador = opcionesFactory.papel()
+		const tijeraJugador = opcionesFactory.tijera()
+		[piedraJugador, papelJugador, tijeraJugador].forEach( { objeto => opcionesJugador.add(objeto)} )
+
+		game.addVisualIn(piedraJugador, game.at(6,8))
+		game.addVisualIn(papelJugador, game.at(12,5))
+		game.addVisualIn(tijeraJugador, game.at(18,8))
+	}
+	
+	override method start(){
+		//Configuro el selector
+		self.selectorHorizontal()
+
+		//Configuro las opciones
+		self.prepararOpcionesMaquina()
+		self.prepararOpcionesJugador()
+		
+		//Activo la eleccion inicial
+		self.opciones().get(index).activar()
+		
+		//Arranco el contador y habilito la seleccion
+		game.addVisual(timer)
+		self.startCountdown(countdownTime)
+		self.seleccionOn()
+	}
+	
+	method startCountdown(segundos){
+		timer.countdown(segundos)
+		game.onTick(segundos * 1000, "PPT_Countdown", { self.timeout() })
+	}
+	
+	method stopCountdown(){
+		game.removeTickEvent("PPT_Countdown")		
+	}
+	
+	override method timeout(){
+		self.stopCountdown()
+		self.seleccionOff()
+		eleccionMaquina = self.elegirMaquina()
+		const eleccionJugador = opcionesJugador.get(index)
+		game.schedule( 1000, { eleccionMaquina.activar() })
+		game.schedule( 1500, { self.procesarResultadoPPT(eleccionJugador.compararCon(eleccionMaquina), resultadoSilvio_PGE) } )
+	}
+
 	method procesarResultadoPPT(resultadoPPT, objResultado){
 		if (resultadoPPT == 3) {
 				objResultado.empata()
@@ -299,45 +382,11 @@ class PPT inherits MinijuegoConSelector{
 		
 	}
 	
-	method startCountDown(){
-		timer.countDown(5)
-		game.schedule(5000, { self.timeOut() })
+	method reboot(){
+		game.removeVisual(resultadoSilvio_PGE)
+		eleccionMaquina.desactivar()
+		self.startCountdown(countdownTime)
 		self.seleccionOn()
-	}
-	
-	override method start(){
-		//Configuro el selector
-		self.selectorHorizontal()
-		//Preparo las opciones de la maquina
-		const piedraMaquina = opcionesFactory.piedra()
-		const papelMaquina = opcionesFactory.papel()
-		const tijeraMaquina = opcionesFactory.tijera()
-		[piedraMaquina, papelMaquina, tijeraMaquina].forEach( { objeto => opcionesMaquina.add(objeto)} )
-		//Preparo las opciones del Jugador
-		const piedraJugador = opcionesFactory.piedra()
-		const papelJugador = opcionesFactory.papel()
-		const tijeraJugador = opcionesFactory.tijera()
-		[piedraJugador, papelJugador, tijeraJugador].forEach( { objeto => opcionesJugador.add(objeto)} )
-		//Agrego las visuales
-		game.addVisualIn(piedraMaquina, game.at(6,17))
-		game.addVisualIn(papelMaquina, game.at(12,21))
-		game.addVisualIn(tijeraMaquina, game.at(18,17))
-		game.addVisualIn(piedraJugador, game.at(6,8))
-		game.addVisualIn(papelJugador, game.at(12,5))
-		game.addVisualIn(tijeraJugador, game.at(18,8))
-		game.addVisual(timer)
-		//Activo la eleccion inicial
-		self.opciones().get(index).activar()
-		//Arranco el contador y empieza el juego
-		self.startCountDown()
-	}
-	
-	method timeOut(){
-		self.seleccionOff()
-		eleccionMaquina = self.elegirMaquina()
-		const eleccionJugador = opcionesJugador.get(index)
-		game.schedule( 1000, { eleccionMaquina.activar() })
-		game.schedule( 1500, { self.procesarResultadoPPT(eleccionJugador.compararCon(eleccionMaquina), resultadoSilvio_PGE) } )
 	}
 
 	override method clear(){
@@ -424,6 +473,7 @@ class PYR inherits MinijuegoConSelector{
 	
 	const pregunta = null
 	const opciones = []
+	const countdownTime = 9
 	
 	override method pantalla() {
 		return pantalla_pyr
@@ -442,25 +492,36 @@ class PYR inherits MinijuegoConSelector{
 		return opciones
 	}
 
-	override method start(){
-		//configuro el selector
-		self.selectorVertical()
-		//Creo y agrego las imagenes del selector
+	method prepararOpciones(){
 		opciones.add(new Selector3x3(position = game.at(1,4)))
 		opciones.add(new Selector3x3(position = game.at(1,7)))
 		opciones.add(new Selector3x3(position = game.at(1,10)))
 		opciones.forEach({ opcion => game.addVisual(opcion) })
-		//Activo la eleccion inicial
-		self.opciones().get(index).activar()
-		//Inicio el contador e inicio el juego
-		const countDown = 9
-		game.addVisual(timer)
-		timer.countDown(countDown)
-		game.schedule(countDown * 1000, {	self.timeOut()  } )
-		self.seleccionOn()
 	}
 
-	method timeOut(){
+	override method start(){
+		//configuro el selector
+		self.selectorVertical()
+
+		//Preparo las opciones
+		self.prepararOpciones()
+
+		//Activo la eleccion inicial
+		self.opciones().get(index).activar()
+
+		//Inicio el contador e inicio el juego
+		self.startCountdown(countdownTime)
+		self.seleccionOn()
+	}
+	
+	method startCountdown(segundos){
+		game.addVisual(timer)
+		timer.countdown(segundos)
+		game.onTick(segundos * 1000, "PYR_Countdown", { self.timeout() })
+	}
+
+	override method timeout(){
+		game.removeTickEvent("PYR_Countdown")
 		self.seleccionOff()
 		self.procesarResultado( pregunta.valorRespuestas().get(index), resultadoGuido_PYR )
 	}
@@ -494,7 +555,6 @@ class CorreBondi inherits Minijuego{
 	
 	var personajeActivo = false
 
-	const filas = new FilasHorizontal()
 	const posicionesFilasY = [9, 13, 17, 21]
 
 	override method recompensa(){
@@ -509,17 +569,16 @@ class CorreBondi inherits Minijuego{
 		return pantalla_bondi
 	}
 
-	method movimientoOn(){ personajeActivo = true	}
+	method movimientoOn(){  personajeActivo = true	}
 	method movimientoOff(){ personajeActivo = false }	
 
 	method esPosicionValida(posicion){
-		return posicion.x().between(5, 24) and posicion.y().between(6, 22) and ( not posicionesFilasY.contains(posicion.y()) or filas.posicionHuecos().contains(posicion) )
+		return posicion.x().between(5, 24) and posicion.y().between(6, 22) and ( not posicionesFilasY.contains(posicion.y()) or filaHorizontal.posicionHuecos().contains(posicion) )
 	}
 
 	method puedeIrA( posicion ){
 		return personajeActivo and self.esPosicionValida( posicion )
 	}
-
 
 	override method keyLeft(){
 		if (self.puedeIrA(pjBondi.position().left(1))) {
@@ -545,38 +604,60 @@ class CorreBondi inherits Minijuego{
 	// Arma las filas tomado la posicion de posicionesFilasY (sin el ulitmo elemento) y le asigna una hueco en una posicion al azar (entre 6 y 13)
 	// La ultima fila tiene el hueco en un posicion fija, por eso no va en el forEach.
 	method armarFilas(){
-		posicionesFilasY.subList(0, posicionesFilasY.size() - 2) .forEach( { posicionY => filas.armarFila(20, (6 .. 13).anyOne() , game.at(5, posicionY)) } )
-		filas.armarFila(20, 10 , game.at(5, posicionesFilasY.last()))
+		posicionesFilasY.subList(0, posicionesFilasY.size() - 2) .forEach( { posicionY => filaHorizontal.armarFila(20, (6 .. 13).anyOne() , game.at(5, posicionY)) } )
+		filaHorizontal.armarFila(20, 10, game.at(5, posicionesFilasY.last()))
 	}
 
 	method estaEnLaMeta(_personaje){
 		return _personaje.position().y() >= bondi.position().y()
 	}
 
-	override method start(){
+	method prepararJuego(){
 		bondi.inicializar()
 		self.armarFilas()
-		pjBondi.inicializar()
-		self.movimientoOn()
-		game.addVisual(timer)
-		timer.countDown(5)
-		game.schedule(5000, {	self.timeOut()  } )
+		pjBondi.inicializar()		
+	}
+	
+	method calcularTiempo(){
+		var posicionHorizontalAComparar = pjBondi.position()
+		var distanciaHorizontal = 0
+
+		filaHorizontal.posicionHuecos().forEach({ posicion => distanciaHorizontal +=  self.calcularDistanciaEnX( posicion, posicionHorizontalAComparar )  
+												  posicionHorizontalAComparar = posicion } )
+		const distanciaVertical = bondi.position().y() - pjBondi.position().y()
+		return (( distanciaHorizontal + distanciaVertical).div(6) + 1 ).min(9)
 	}
 
-	method timeOutBondi(){
-		
+	method calcularDistanciaEnX(posicion1, posicion2){
+		return (posicion1.x() - posicion2.x()).abs()
+	}
+	
+	override method start(){
+		self.prepararJuego()
+		self.startCountdown(self.calcularTiempo())
+		self.movimientoOn()
+	}
+
+	method startCountdown(segundos){
+		game.addVisual(timer)
+		timer.countdown(segundos)
+		game.onTick(segundos * 1000, "PPT_Countdown", { self.timeout() })
+	}
+
+	method timeout(){
+		game.removeTickEvent("PPT_Countdown")
+		self.movimientoOff()
+		self.arrancarBondi()
+	}
+
+	method arrancarBondi(){
 		bondi.avanzar(8)
 		game.schedule(1000, { bondi.image("vacio.png")
 							  self.procesarResultado(self.estaEnLaMeta(pjBondi), resultadoSilvio_PGE) } )	
 	}
 
-	method timeOut(){
-		self.movimientoOff()
-		self.timeOutBondi()
-	}
-
 	override method clear(){
-		filas.clear()
+		filaHorizontal.clear()
 		game.removeVisual(timer)
 		game.removeVisual(resultadoSilvio_PGE)
 		game.removeVisual(bondi)
@@ -585,9 +666,9 @@ class CorreBondi inherits Minijuego{
 	
 }
 
-class FilasHorizontal{
-	const property personas = #{}
-	const property posicionHuecos = #{}
+object filaHorizontal{
+	var property personas = #{}
+	var property posicionHuecos = #{}
 	
 	// Arma una fila de "largo" hacia la derecha comenzado desde "posicionInicio".
 	// Se debe indicar en que numero hay un hueco ("posicionHueco").
@@ -609,13 +690,11 @@ class FilasHorizontal{
 	
 	method clear(){
 		personas.forEach( {  persona => game.removeVisual(persona) })
+		personas = #{}
+		posicionHuecos = #{}
 	}	
 }
 
-class Persona {
-	const property image = null
-	const property position = null
-}
 
 object pjBondi {
 	var property position = null
@@ -653,6 +732,11 @@ object bondi {
 		}
 	}
 	
+}
+
+class Persona {
+	const property image = null
+	const property position = null
 }
 
 object pantalla_bondi {
