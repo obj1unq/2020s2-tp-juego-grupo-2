@@ -32,12 +32,12 @@ object configurar {
 	}
 
 	method board() {
-		//Configuracion del tablero de wollok
+		//Configuracion inicial del tablero
+		game.title("El juego de las estrellas de Cronica")
 		game.height(32) // 20
 		game.width(30) // 15
 		game.cellSize(30) // 50
 		game.boardGround("tablero_01.jpg")
-		
 	}
 
 	method teclas() {

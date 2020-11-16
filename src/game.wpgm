@@ -1,13 +1,18 @@
 import wollok.game.*
-import pruebaInicio.*
+import configuracion.*
 import eventos.*
+import musica.*
 
 program game {
-	game.title("El juego de las estrellas de Cronica")
 	
+	
+	//Configuracion inicial
+	configurar.board()
+	configurar.juego()
+	configurar.teclas()
 	game.addVisual(evento_inicioDelJuego)
+	game.schedule(0, { musica.playCronica() } )	
 
-	tutorial.iniciar()
-
+	//Comienzo del juego
 	game.start()
 }

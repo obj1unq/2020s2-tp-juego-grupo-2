@@ -1,7 +1,7 @@
 import wollok.game.*
 import minijuegos.*
 import sistemaDeTurnos.*
-import pruebaInicio.*
+import musica.*
 
 
 /*----------------------------------------------------------------------------------------

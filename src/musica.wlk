@@ -1,17 +1,4 @@
 import wollok.game.*
-import camino.*
-import configuracion.*
-
-object tutorial {
-
-	method iniciar(){
-		configurar.board()
-		configurar.juego()
-		configurar.teclas()
-		
-		game.schedule(0, { musica.playCronica() } )
-	}
-}
 
 object musica {
 	
