@@ -8,8 +8,11 @@ object musica {
 						"sonidos/b_soda_stereo_persiana_americana.wav", "sonidos/b_soda.wav"]
 	var index = 0
     var track
- 	const time = 180000
- 
+	var fadeoutRunning = false
+	// Tiempo entre temas
+	// Hay que tener en cuenta que al tiempo se le suman los 5000ms del fadeout (El tema mas largo de la playlist dura 170000ms)
+ 	const time = 155000  
+ 	
  	method playCronica(){
  		temaCronica.shouldLoop(true)
  		temaCronica.play()
@@ -27,22 +30,37 @@ object musica {
         track = game.sound(playlist.first())
 		self.play()
 
-        game.onTick( time,"Musica",{ self.next() } )
+        game.onTick( time,"Musica",{ self.fadeout() } )
     }
     
     method play(){
         track.volume(1)
   		track.play()
-        self.fadeout()
     }
     
     method fadeout() {
-       	game.schedule( time - 5000, { track.volume(0.5) } )
-    	game.schedule( time - 4000, { track.volume(0.4) } )
-    	game.schedule( time - 3000, { track.volume(0.3) } )
-    	game.schedule( time - 2000, { track.volume(0.2) } )
-    	game.schedule( time - 1000, { track.volume(0.1) } )
+    	var volumen = 0.5
+    	fadeoutRunning = true
+
+    	game.onTick(1000,"Fadeout", { track.volume(volumen) 
+    								  volumen = volumen - 0.1
+    								  self.validarNext(volumen)
+    	})
     }
+
+    method stopFadeout(){
+    	if (fadeoutRunning) {
+    		game.removeTickEvent("Fadeout")
+    		fadeoutRunning = false
+    	}
+    }
+    
+	method validarNext(volumen){
+		if (volumen < 0.1){
+			self.stopFadeout()
+			self.next()
+		}
+	}
     
     method next(){
         track.stop()
@@ -53,6 +71,7 @@ object musica {
     
     method stopPlaylist(){
     	game.removeTickEvent("Musica")
+    	self.stopFadeout()
     	track.stop()
     }
     

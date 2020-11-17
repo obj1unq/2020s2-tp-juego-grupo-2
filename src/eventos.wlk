@@ -118,6 +118,8 @@ class Castigo {
 
 ----------------------------------------------------------------------------------------*/
 
+
+//La clase opciones tiene los metodos para identificar si se aceptan o no el input de las tecas.
 class Opciones {
 	var opcionesActivo = false
 
@@ -153,16 +155,18 @@ object evento_inicioDelJuego inherits Opciones {
 	}
 }
 
-
 object evento_finDelTurno {
 	var property image = "fin_del_turno.png"
 	const property position = game.at(0,0)
 }
 
 object evento_finDelJuego inherits Opciones {
-	const himno = game.sound("sonidos/himno.mp3")
+	// Como wollok solo puede reproducir una vez cada audio seteo la variable 
+	// cada vez que se ejecuta por si se vuelve a jugar.
+	var himno 
 	
 	method activar(){
+		himno = game.sound("sonidos/himno.mp3")
 		musica.stopPlaylist()
 		himno.shouldLoop(true)
 		himno.play()

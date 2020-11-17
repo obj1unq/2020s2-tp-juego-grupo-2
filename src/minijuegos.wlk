@@ -9,7 +9,7 @@ import eventos.*
  * 
  * miniGameManager.load(miniGame)   - carga el juego
  * miniGameManager.start()			- inicia el juego cargado
- * miniGameManager.clear() 			- envia el mensaje de limpieza al juego cargado, y limpia el juego de la maquina.
+ * miniGameManager.clear() 			- envia el mensaje de limpieza al juego cargado, y saca el juego del trablero.
  * 
  */
 
@@ -27,6 +27,7 @@ object miniGameManager{
 	method clear(){
 		miniGame.clear()
 		game.removeVisual(miniGame)
+		miniGame = null
 	}
 	
 	method start(){
@@ -173,13 +174,6 @@ object timer{
 class Minijuego {
 	const property position = game.at(0,0)
 	
-	
-	method keyUp(){ /*Sin uso*/	}
-	method keyDown(){ /*Sin uso*/	}
-	method keyLeft(){ /*Sin uso*/	}
-	method keyRight(){ /*Sin uso*/	}
-	method enter(){ /*Sin uso*/	}
-
 	method finalizar(objResultado, eventoResultado){
 			game.addVisual(objResultado)
 			objResultado.playSound()
@@ -196,6 +190,12 @@ class Minijuego {
 			self.finalizar(objResultado, self.castigo())
 		}
 	}
+
+	method keyUp(){ /*Sin uso*/	}
+	method keyDown(){ /*Sin uso*/	}
+	method keyLeft(){ /*Sin uso*/	}
+	method keyRight(){ /*Sin uso*/	}
+	method enter(){ /*Sin uso*/	}
 	
 	method start()
 	method clear()
@@ -203,7 +203,6 @@ class Minijuego {
 	method recompensa()
 	method castigo()
 }	
-
 
 /*-----------------------------------------------------------------------------------------------------------
 	 									Super clase mini juego con selector de 3 opciones
@@ -451,18 +450,15 @@ object opcionesFactory{
 
 class Selector3x3{
 	var property image = "selector0.png"
-	var property position = game.at(-10,-10)
+	var property position = null
 
 	method activar(){
 		image = "selector1.png"
-		
 	}
 
 	method desactivar(){
 		image = "selector0.png"
-		
 	}
-
 }
 
 /*-----------------------------------------------------------------------------------------------------------
@@ -554,8 +550,11 @@ class CorreBondi inherits Minijuego{
 	const property image = "correBondi.png"
 	
 	var personajeActivo = false
-
 	const posicionesFilasY = [9, 13, 17, 21]
+
+	override method pantalla() {
+		return pantalla_bondi
+	}
 
 	override method recompensa(){
 		return new Recompensa(movimientos = 2)
@@ -565,20 +564,8 @@ class CorreBondi inherits Minijuego{
 		return new Castigo(movimientos = 2)		
 	}
 	
-	override method pantalla() {
-		return pantalla_bondi
-	}
-
 	method movimientoOn(){  personajeActivo = true	}
 	method movimientoOff(){ personajeActivo = false }	
-
-	method esPosicionValida(posicion){
-		return posicion.x().between(5, 24) and posicion.y().between(6, 22) and ( not posicionesFilasY.contains(posicion.y()) or filaHorizontal.posicionHuecos().contains(posicion) )
-	}
-
-	method puedeIrA( posicion ){
-		return personajeActivo and self.esPosicionValida( posicion )
-	}
 
 	override method keyLeft(){
 		if (self.puedeIrA(pjBondi.position().left(1))) {
@@ -601,22 +588,33 @@ class CorreBondi inherits Minijuego{
 		}
 	}
 	
-	// Arma las filas tomado la posicion de posicionesFilasY (sin el ulitmo elemento) y le asigna una hueco en una posicion al azar (entre 6 y 13)
-	// La ultima fila tiene el hueco en un posicion fija, por eso no va en el forEach.
-	method armarFilas(){
-		posicionesFilasY.subList(0, posicionesFilasY.size() - 2) .forEach( { posicionY => filaHorizontal.armarFila(20, (6 .. 13).anyOne() , game.at(5, posicionY)) } )
-		filaHorizontal.armarFila(20, 10, game.at(5, posicionesFilasY.last()))
+	method esPosicionValida(posicion){
+		return posicion.x().between(5, 24) and posicion.y().between(6, 22) and ( not posicionesFilasY.contains(posicion.y()) or filaHorizontal.posicionHuecos().contains(posicion) )
 	}
 
-	method estaEnLaMeta(_personaje){
-		return _personaje.position().y() >= bondi.position().y()
+	method puedeIrA( posicion ){
+		return personajeActivo and self.esPosicionValida( posicion )
 	}
+	
+	// Arma las filas tomado la posicion de posicionesFilasY (sin el ulitmo elemento) y le asigna una hueco en una posicion al azar (entre 6 y 13)
+	// La ultima fila tiene el hueco en un posicion fija, por eso no va en el forEach.
+
 
 	method prepararJuego(){
 		bondi.inicializar()
 		self.armarFilas()
 		pjBondi.inicializar()		
 	}
+
+	method armarFilas(){
+		posicionesFilasY.subList(0, posicionesFilasY.size() - 2) .forEach( { posicionY => filaHorizontal.armarFila(20, (6 .. 13).anyOne() , game.at(5, posicionY)) } )
+		filaHorizontal.armarFila(20, 10, game.at(5, posicionesFilasY.last()))
+	}
+	
+	method estaEnLaMeta(_personaje){
+		return _personaje.position().y() >= bondi.position().y()
+	}
+	
 	
 	method calcularTiempo(){
 		var posicionHorizontalAComparar = pjBondi.position()
@@ -641,11 +639,11 @@ class CorreBondi inherits Minijuego{
 	method startCountdown(segundos){
 		game.addVisual(timer)
 		timer.countdown(segundos)
-		game.onTick(segundos * 1000, "PPT_Countdown", { self.timeout() })
+		game.onTick(segundos * 1000, "Bondi_Countdown", { self.timeout() })
 	}
 
 	method timeout(){
-		game.removeTickEvent("PPT_Countdown")
+		game.removeTickEvent("Bondi_Countdown")
 		self.movimientoOff()
 		self.arrancarBondi()
 	}
@@ -697,7 +695,7 @@ object filaHorizontal{
 
 
 object pjBondi {
-	var property position = null
+	var property position = game.at(15, 6)
 	
 	method inicializar(){
 		position = game.at(15, 6)
@@ -707,7 +705,7 @@ object pjBondi {
 	method image() {
 		return 
 		if (self.position().y() == bondi.position().y()){
-			"vacio.png"
+			"vacio.png" 
 		}
 		else "persona0.png"
 	}
@@ -715,7 +713,7 @@ object pjBondi {
 
 object bondi {
 	var property image = "bondi.png"
-	var property position = null
+	var property position = game.at(13, 22)
 	
 	method inicializar(){
 		position = game.at(13, 22)
