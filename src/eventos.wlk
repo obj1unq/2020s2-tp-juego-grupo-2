@@ -13,12 +13,18 @@ import musica.*
 object evento_finalizarTurno {
 
 	method activar(){
-		game.addVisual(evento_finDelTurno)
-		game.schedule(1500,{ game.removeVisual(evento_finDelTurno)
+		game.addVisual(pantalla_finDelTurno)
+		game.schedule(1500,{ game.removeVisual(pantalla_finDelTurno)
 								 turno.pasar()
 								 tablero.activar() })
 	}
 }
+
+object pantalla_finDelTurno {
+	var property image = "fin_del_turno.png"
+	const property position = game.at(0,0)
+}
+
 
 /*----------------------------------------------------------------------------------------
 	
@@ -90,6 +96,16 @@ class Recompensa {
 	const movimientos = 2
 	
 	method activar(){
+		evento_numero.cambiarA(movimientos)
+		game.addVisual(evento_avanzar)
+		game.addVisual(evento_numero)
+		game.schedule(1500, { 		game.removeVisual(evento_avanzar)
+									game.removeVisual(evento_numero)
+		})
+		game.schedule(2000, {self.ejecutar()})
+	}
+	
+	method ejecutar(){
 		turno.jugadorActivo().avanzar(movimientos)
 		turno.jugadorActivo().animarMovimiento()	
 		if (turno.jugadorActivo().estaEnLaMeta()) {
@@ -103,13 +119,42 @@ class Recompensa {
 
 class Castigo {
 	const movimientos = 2
-	
+
 	method activar(){
+		game.addVisual(evento_retroceder)
+		evento_numero.cambiarA(movimientos)
+		game.addVisual(evento_numero)
+		game.schedule(1500, { 		game.removeVisual(evento_retroceder)
+									game.removeVisual(evento_numero)
+		})
+		game.schedule(2000, {self.ejecutar()})
+	}
+	
+	method ejecutar(){
 		turno.jugadorActivo().retroceder(movimientos)
 		turno.jugadorActivo().animarMovimiento()
 		game.schedule(500 * movimientos, { evento_finalizarTurno.activar() })	
 	}
+}
 
+object evento_numero {
+	const property position = game.at(13,14)	
+	var property image = null
+	
+	method cambiarA(numero){
+		image = numero.toString() + ".png"
+	}
+
+}
+
+object evento_avanzar {
+	var property image = "pantalla_avanzas.png"
+	const property position = game.at(0,0)
+}
+
+object evento_retroceder {
+	var property image = "pantalla_retrocedes.png"
+	const property position = game.at(0,0)
 }
 
 /*----------------------------------------------------------------------------------------
@@ -153,11 +198,6 @@ object evento_inicioDelJuego inherits Opciones {
 			musica.iniciarPlaylist()
 		}
 	}
-}
-
-object evento_finDelTurno {
-	var property image = "fin_del_turno.png"
-	const property position = game.at(0,0)
 }
 
 object evento_finDelJuego inherits Opciones {

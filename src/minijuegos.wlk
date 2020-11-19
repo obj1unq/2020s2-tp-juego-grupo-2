@@ -480,7 +480,7 @@ class PYR inherits MinijuegoConSelector{
 	}
 	
 	override method castigo(){
-		return new Castigo(movimientos = 2)		
+		return new Castigo(movimientos = 4)		
 	}
 	
 	
@@ -557,7 +557,7 @@ class CorreBondi inherits Minijuego{
 	}
 
 	override method recompensa(){
-		return new Recompensa(movimientos = 2)
+		return new Recompensa(movimientos = 4)
 	}
 	
 	override method castigo(){
