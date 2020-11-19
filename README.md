@@ -10,6 +10,8 @@ En este juego, las estrellas participaran de una carrera por nuestra querida ave
 
 Tenemos la participacion especial de **Guido "A ver la repe" Kaczka**, con sus relatos y comentarios a lo largo de la carrera.
 
+---
+
 ### Como se juega
 
 Para comenzar, se debe presionar la tecla **1**, quien se encargara de indicarle al participante que tome la posicion inicial para arrancar la carrera. Recuerden que pueden participar como maximo los 4 iconos nacionales antes mencionados.
