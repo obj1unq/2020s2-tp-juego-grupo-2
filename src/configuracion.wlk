@@ -42,17 +42,10 @@ object configurar {
 
 	method teclas() {
 	
-		// Jugador
-//		keyboard.c().onPressDo({ game.say(jugador, jugador.position().toString()) })
-//		keyboard.up().onPressDo({ jugador.moverA(jugador.position().up(1)) })
-//		keyboard.down().onPressDo({ jugador.moverA(jugador.position().down(1))})
-//		keyboard.left().onPressDo({ jugador.moverA(jugador.position().left(1)) })
-//		keyboard.right().onPressDo({ jugador.moverA(jugador.position().right(1)) })
 	
 		// Turno
 		keyboard.t().onPressDo({ turno.tirarDados()})
-		keyboard.num1().onPressDo({ turno.agregarPersonaje(new Jugador(camino = caminoDeJuego, image = "jugador" + turno.cantidadDePersonajes().toString() +".png")) })
-		//keyboard.c().onPressDo({ game.say(jugador1, jugador1.position())})	
+		keyboard.num1().onPressDo({ turno.agregarPersonaje(new Jugador(camino = caminoDeJuego, image = "jugador" + turno.cantidadDePersonajes().toString() +".png")) })	
 	
 		// Minijuegos
 		keyboard.up().onPressDo({ miniGameManager.keyUp()})
@@ -60,21 +53,6 @@ object configurar {
 		keyboard.left().onPressDo({ miniGameManager.keyLeft()})
 		keyboard.right().onPressDo({ miniGameManager.keyRight()})
 		
-//		const pe  = preguntasFactory.nueva("p_pe.png",  [false, true, false])
-//		const lh  = preguntasFactory.nueva("p_lh.png",  [false, false, true])
-//		const alf = preguntasFactory.nueva("p_alf.png", [true, false, false])
-//		const gu  = preguntasFactory.nueva("p_gu.png",  [false, true, false])
-//		const mo  = preguntasFactory.nueva("p_mo.png",  [true, false, false])
-//		const io  = preguntasFactory.nueva("p_io.png",  [false, false, true])
-//		const ba  = preguntasFactory.nueva("p_ba.png",  [false, true, false])
-//		const ri  = preguntasFactory.nueva("p_ri.png",  [true, false, false])
-		
-//		const listPYR = [pe,lh,alf,gu,mo,io,ba,ri]
-
-		
-//		keyboard.s().onPressDo({ miniGameManager.load( miniGameFactory.ppt()) miniGameManager.start() })
-//		keyboard.d().onPressDo({ miniGameManager.load( miniGameFactory.pyr(listPYR.anyOne()) ) miniGameManager.start() })
-//		keyboard.a().onPressDo({ miniGameManager.load( miniGameFactory.correBondi()) miniGameManager.start() })
 
 		//Inicio del juego
 		keyboard.space().onPressDo( { evento_inicioDelJuego.iniciar()} )
@@ -84,7 +62,6 @@ object configurar {
 		keyboard.q().onPressDo( { evento_finDelJuego.salir()} )
 		keyboard.enter().onPressDo( { evento_finDelJuego.volverAjugar() 
 									   miniGameManager.enter() } )
-//		keyboard.p().onPressDo( { evento_fin.ganador(1) } )
 	}
 
 }

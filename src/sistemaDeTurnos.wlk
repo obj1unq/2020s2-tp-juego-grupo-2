@@ -93,7 +93,7 @@ object dado {
 
 	method mostrarResultado() {
 		game.schedule(1400, { image = "dado_" + resultado.toString() + ".png"
-		; game.addVisual(self)
+		game.addVisual(self)
 		})
 		game.schedule(2400, { game.removeVisual(self)})
 	}

@@ -8,7 +8,7 @@ class Jugador {
 	var property casillaActual = null
 	var property position = null
 
-	override method initialize() {
+	method inicializar() {
 		casillaActual = camino.partida()
 		position = casillaActual.ubicacion()
 	}

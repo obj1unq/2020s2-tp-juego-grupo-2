@@ -64,7 +64,7 @@ describe "inicializacion jugadores" {
 		caminoLargo.poner_En(premio, 2)
 		const jugador1 = new Jugador(camino = caminoLargo)
 		jugador1.inicializar()
-		jugador1.movimientoCompleto(2)
+		jugador1.moverse(2)
 		assert.equals(caminoLargo.casillaNumero(4), jugador1.casillaActual())		
 		}
 
@@ -76,7 +76,7 @@ describe "inicializacion jugadores" {
 		caminoLargo.poner_En(castigo, 4)
 		const jugador1 = new Jugador(camino = caminoLargo)
 		jugador1.inicializar()
-		jugador1.movimientoCompleto(4)
+		jugador1.moverse(4)
 		assert.equals(caminoLargo.casillaNumero(2), jugador1.casillaActual())		
 		}
 
