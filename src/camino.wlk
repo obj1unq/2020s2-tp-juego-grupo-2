@@ -54,14 +54,6 @@ class Camino {
 		self.casillaNumero(numCasilla).asignarEvento(evento)
 	}
 	
-	method generarPremios(numerosCasillas){
-		numerosCasillas.forEach({numero => self.poner_En(new Recompensa(), numero)})
-	}
-	
-	method generarCastigos(numerosCasillas){
-		numerosCasillas.forEach({numero => self.poner_En(new Castigo(), numero)})
-	}
-	
 	method generarEventoEnCasillas(evento, numerosCasillas){
 		numerosCasillas.forEach({casilla => self.poner_En(evento, casilla)})
 	}
