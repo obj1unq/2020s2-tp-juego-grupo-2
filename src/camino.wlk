@@ -58,13 +58,20 @@ class Camino {
 		numerosCasillas.forEach({casilla => self.poner_En(evento, casilla)})
 	}
 	
+	method colocarImagenesEnCasillas(imagen, numerosCasillas){
+		numerosCasillas.forEach({casilla => self.ponerImagen_En(new Semaforo(image=imagen.image()), casilla)})
+	}
+	
+	method ponerImagen_En(imagen, numCasilla){
+		game.addVisualIn(imagen, self.casillaNumero(numCasilla).position())
+	}
 }
 
 class Casilla {
 
 	const property numero
 	var property evento = null
-	const position
+	const property position
 
 	method representacion() {
 		return [ position, position.left(1), position.up(1), position.up(1).left(1) ]
@@ -109,3 +116,7 @@ class Casilla {
 
 }
 
+class Semaforo {
+		const property image
+		var property position = null
+	}
