@@ -13,6 +13,7 @@ class Camino {
 			casillas.add(new Casilla(position = posicion, numero = _numero))
 			_numero += 1
 		})
+		self.poner_En(evento_finDelJuego,33)
 	}
 
 	method partida() {
@@ -59,6 +60,10 @@ class Camino {
 	
 	method generarCastigos(numerosCasillas){
 		numerosCasillas.forEach({numero => self.poner_En(new Castigo(), numero)})
+	}
+	
+	method generarEventoEnCasillas(evento, numerosCasillas){
+		numerosCasillas.forEach({casilla => self.poner_En(evento, casilla)})
 	}
 	
 }

@@ -56,29 +56,5 @@ describe "inicializacion jugadores" {
 		
 	}
 		
-	test "test jugador recibe un premio en la casilla destino y avanza 2 casillas mas"{
-		const pos = [game.at(10,10),game.at(10,12),game.at(10,14),game.at(10,16),game.at(10,18)]		
-		const caminoLargo = new Camino()
-		const premio = new Recompensa()
-		caminoLargo.construirse(pos)
-		caminoLargo.poner_En(premio, 2)
-		const jugador1 = new Jugador(camino = caminoLargo)
-		jugador1.inicializar()
-		jugador1.moverse(2)
-		assert.equals(caminoLargo.casillaNumero(4), jugador1.casillaActual())		
-		}
-
-	test "test jugador recibe un castigo en la casilla destino y retrocede 2 casillas"{
-		const pos = [game.at(10,10),game.at(10,12),game.at(10,14),game.at(10,16),game.at(10,18)]		
-		const caminoLargo = new Camino()
-		const castigo = new Castigo()
-		caminoLargo.construirse(pos)
-		caminoLargo.poner_En(castigo, 4)
-		const jugador1 = new Jugador(camino = caminoLargo)
-		jugador1.inicializar()
-		jugador1.moverse(4)
-		assert.equals(caminoLargo.casillaNumero(2), jugador1.casillaActual())		
-		}
-
 }
 

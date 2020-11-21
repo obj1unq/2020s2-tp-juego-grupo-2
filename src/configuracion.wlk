@@ -13,22 +13,20 @@ object configurar {
 	method juego() {
 		//configuracion e inicializacion de camino
 		const listacasillas = [ game.at(27, 5), game.at(24,5), game.at(21,5), game.at(18,4), game.at(15,4), game.at(12,4), game.at(9,4), game.at(6,5), game.at(5,7), game.at(5,10), game.at(7,12), game.at(10,12), game.at(13,11), game.at(16,11), game.at(19,11), game.at(22,11), game.at(24,13), game.at(25,17), game.at(23,18), game.at(20,19), game.at(17,19), game.at(14,18), game.at(11,18), game.at(8,18), game.at(5,19), game.at(5,22), game.at(6,25), game.at(9,25), game.at(12,25), game.at(15,25), game.at(18,25), game.at(21,25), game.at(24,25), game.at(27, 25) ]
-		const posPremios = [4,7,10,14,24,31]
+		const posPremios = [4,7,10,14,24,30]
 		const posCastigos = [2,13,17,29,32]
+		const posPPT = [3,12,21]
+		const posPYR = [6,15,16]
+		const posBondi =[9,18,27]
+		const premioStandar = new Recompensa()
+		const castigoStandar = new Castigo()
 		caminoDeJuego.construirse(listacasillas)
-		caminoDeJuego.generarPremios(posPremios)
-		caminoDeJuego.generarCastigos(posCastigos)
 		//Agregamos los eventos al tablero
-		caminoDeJuego.poner_En(evento_ppt, 3)
-		caminoDeJuego.poner_En(evento_ppt, 12)
-		caminoDeJuego.poner_En(evento_ppt, 21)
-		caminoDeJuego.poner_En(evento_pyr, 6)
-		caminoDeJuego.poner_En(evento_pyr, 15)
-		caminoDeJuego.poner_En(evento_pyr, 16)
-		caminoDeJuego.poner_En(evento_bondi, 9)
-		caminoDeJuego.poner_En(evento_bondi, 18)
-		caminoDeJuego.poner_En(evento_bondi, 27)
-		caminoDeJuego.poner_En(evento_finDelJuego,33)
+		caminoDeJuego.generarEventoEnCasillas(premioStandar, posPremios)
+		caminoDeJuego.generarEventoEnCasillas(castigoStandar, posCastigos)
+		caminoDeJuego.generarEventoEnCasillas(evento_ppt, posPPT)
+		caminoDeJuego.generarEventoEnCasillas(evento_pyr, posPYR)
+		caminoDeJuego.generarEventoEnCasillas(evento_bondi, posBondi)
 	}
 
 	method board() {

@@ -25,6 +25,7 @@ object turno {
 	method agregarPersonaje(personaje) {
 		if (tablero.activo()){
 			self.validarParaAgregar()
+			personaje.inicializar()
 			game.addVisual(personaje)
 			listaDePersonajes.add(personaje)
 		}
