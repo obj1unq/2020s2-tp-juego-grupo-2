@@ -5,7 +5,7 @@ En este juego, las estrellas participaran de una carrera por nuestra querida ave
 ### Participantes
 - **Ricky "El comandante" Fort**
 - **Daniel "Atiende boludos" Frasca**
-- ** Moria "Si queres llorar, llora !" Casan**
+- **Moria "Si queres llorar, llora !" Casan**
 - **Susana "Pero vivooos???" Gimenez**
 
 Tenemos la participacion especial de **Guido "A ver la repe" Kaczka**, con sus relatos y comentarios a lo largo de la carrera.
