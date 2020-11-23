@@ -94,18 +94,26 @@ object evento_bondi {
 
 class Recompensa {
 	const movimientos = 2
+	var sound = "sonidos/win.mp3"
+	
+	method playSound(){	
+		game.sound(sound).play()
+	}
 	
 	method activar(){
 		evento_numero.cambiarA(movimientos)
+		self.playSound()
 		game.addVisual(evento_avanzar)
 		game.addVisual(evento_numero)
 		game.schedule(1500, { 		game.removeVisual(evento_avanzar)
 									game.removeVisual(evento_numero)
 		})
 		game.schedule(2000, {self.ejecutar()})
+		
 	}
 	
 	method ejecutar(){
+		
 		turno.jugadorActivo().avanzar(movimientos)
 		turno.jugadorActivo().animarMovimiento()	
 		if (turno.jugadorActivo().estaEnLaMeta()) {
@@ -114,26 +122,36 @@ class Recompensa {
 		else {
 			game.schedule(500 * movimientos, { evento_finalizarTurno.activar() })
 		}
+		
 	}
 }
 
 class Castigo {
 	const movimientos = 2
-
+	var sound = "sonidos/lose.mp3"
+	
+	method playSound(){	
+		game.sound(sound).play()
+	}
+	
 	method activar(){
 		game.addVisual(evento_retroceder)
+		self.playSound()
 		evento_numero.cambiarA(movimientos)
 		game.addVisual(evento_numero)
 		game.schedule(1500, { 		game.removeVisual(evento_retroceder)
 									game.removeVisual(evento_numero)
 		})
 		game.schedule(2000, {self.ejecutar()})
+		
 	}
 	
 	method ejecutar(){
+		
 		turno.jugadorActivo().retroceder(movimientos)
 		turno.jugadorActivo().animarMovimiento()
-		game.schedule(500 * movimientos, { evento_finalizarTurno.activar() })	
+		game.schedule(500 * movimientos, { evento_finalizarTurno.activar() })
+			
 	}
 }
 
