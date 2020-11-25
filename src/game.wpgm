@@ -2,17 +2,19 @@ import wollok.game.*
 import configuracion.*
 import eventos.*
 import musica.*
+import teclasInicio.*
 
 program game {
-	
 	
 	//Configuracion inicial
 	configurar.board()
 	configurar.juego()
 	configurar.teclas()
 	game.addVisual(evento_inicioDelJuego)
+	evento_inicioDelJuego.inicializar()
 	game.schedule(0, { musica.playCronica() } )	
 
 	//Comienzo del juego
 	game.start()
+	//
 }

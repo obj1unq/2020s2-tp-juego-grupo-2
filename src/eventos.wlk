@@ -2,6 +2,7 @@ import wollok.game.*
 import minijuegos.*
 import sistemaDeTurnos.*
 import musica.*
+import teclasInicio.*
 
 
 /*----------------------------------------------------------------------------------------
@@ -182,7 +183,7 @@ object evento_retroceder {
 ----------------------------------------------------------------------------------------*/
 
 
-//La clase opciones tiene los metodos para identificar si se aceptan o no el input de las tecas.
+//La clase opciones tiene los metodos para identificar si se aceptan o no el input de las teclas.
 class Opciones {
 	var opcionesActivo = false
 
@@ -197,24 +198,68 @@ class Opciones {
 
 
 object evento_inicioDelJuego inherits Opciones {
-	const property image = "inicio.png"
+	var property image = "intro.jpg"
 	const property position = game.at(0,0)
+	var property activo = true
 	
+	const teclaJugar = new Tecla(nombre="jugar", position=game.at(0,5), image="jugar0.png")
+	const property teclasInicio = new Tecla(nombre="comienzo", position=game.at(0,5), image="comienzo0.png")
+	const teclaSiguiente = new Tecla(nombre="siguiente", position=game.at(0,2), image="siguiente0.png")
 	
-	override method initialize(){
+	method inicializar() {
 		self.activarOpciones()
+		teclasInicio.funcion()
 	}
 
-	method activar(){}
+	method desactivar(){
+		activo = false
+	}
 
 	method iniciar(){
+		
 		if (opcionesActivo){
 			self.desactivarOpciones()
+			self.desactivar()
+			self.validarKillTeclas()
 			game.removeVisual(self)
 			tablero.activar()
 			musica.stopCronica()
 			musica.iniciarPlaylist()
 		}
+	}
+	
+	method objetivo() {
+		if (opcionesActivo){
+			image = "placa_1.jpg"
+			self.validarKillTeclas()
+			self.validarFuncion(teclaSiguiente)
+		}
+	}
+	
+	method tutorial() {
+		if (opcionesActivo){
+			image = "placa_2.jpg"
+			self.validarKillTeclas()
+			game.schedule(10000, { 	self.validarFuncion(teclaJugar)	} )
+		}
+	}
+	
+	method validarKillTeclas() {
+		self.validarKill(teclasInicio)
+		self.validarKill(teclaJugar)
+		self.validarKill(teclaSiguiente)
+	}
+	
+	method validarKill(tecla){
+		if (game.hasVisual(tecla)) {
+			tecla.kill()
+		}
+	}
+	
+	method validarFuncion(tecla){
+		if (not game.hasVisual(tecla)){
+				tecla.funcion()
+			}
 	}
 }
 
@@ -277,3 +322,4 @@ object opcionesFin{
 		image = "opcionesFin" + numeroDeImagenActual + ".png"
 	}
 }
+

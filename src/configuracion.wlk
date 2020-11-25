@@ -58,17 +58,21 @@ object configurar {
 		keyboard.up().onPressDo({ miniGameManager.keyUp()})
 		keyboard.down().onPressDo({ miniGameManager.keyDown()})
 		keyboard.left().onPressDo({ miniGameManager.keyLeft()})
-		keyboard.right().onPressDo({ miniGameManager.keyRight()})
+		keyboard.right().onPressDo({ 
+			miniGameManager.keyRight()
+			evento_inicioDelJuego.tutorial()
+		})
 		
 
 		//Inicio del juego
-		keyboard.space().onPressDo( { evento_inicioDelJuego.iniciar()} )
+		keyboard.space().onPressDo( { evento_inicioDelJuego.objetivo()} )
 
 
 		//Fin Del Juego
 		keyboard.q().onPressDo( { evento_finDelJuego.salir()} )
 		keyboard.enter().onPressDo( { evento_finDelJuego.volverAjugar() 
-									   miniGameManager.enter() } )
+									   miniGameManager.enter()
+									   evento_inicioDelJuego.iniciar() } )
 	}
 
 }
