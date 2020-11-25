@@ -9,11 +9,12 @@ class Camino {
 
 	method construirse(_posiciones) {
 		var _numero = 0
+		const numUltima = _posiciones.size() - 1
 		_posiciones.forEach({ posicion =>
 			casillas.add(new Casilla(position = posicion, numero = _numero))
 			_numero += 1
 		})
-		self.poner_En(evento_finDelJuego,33)
+		self.poner_En(evento_finDelJuego, numUltima)
 	}
 
 	method partida() {
