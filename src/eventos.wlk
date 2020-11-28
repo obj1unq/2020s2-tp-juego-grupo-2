@@ -205,10 +205,11 @@ object evento_inicioDelJuego inherits Opciones {
 	const teclaJugar = new Tecla(nombre="jugar", position=game.at(0,5), image="jugar0.png")
 	const property teclasInicio = new Tecla(nombre="comienzo", position=game.at(0,5), image="comienzo0.png")
 	const teclaSiguiente = new Tecla(nombre="siguiente", position=game.at(0,2), image="siguiente0.png")
+	const teclaGlosario = new Tecla(nombre="glosario", position=game.at(1,29), image="glosario0.png")
 	
 	method inicializar() {
 		self.activarOpciones()
-		teclasInicio.funcion()
+		teclasInicio.mostrar()
 	}
 
 	method desactivar(){
@@ -216,7 +217,7 @@ object evento_inicioDelJuego inherits Opciones {
 	}
 
 	method iniciar(){
-		
+		teclaGlosario.mostrar()
 		if (opcionesActivo){
 			self.desactivarOpciones()
 			self.desactivar()
@@ -232,7 +233,7 @@ object evento_inicioDelJuego inherits Opciones {
 		if (opcionesActivo){
 			image = "placa_1.jpg"
 			self.validarKillTeclas()
-			self.validarFuncion(teclaSiguiente)
+			self.validarMostrar(teclaSiguiente)
 		}
 	}
 	
@@ -240,7 +241,7 @@ object evento_inicioDelJuego inherits Opciones {
 		if (opcionesActivo){
 			image = "placa_2.jpg"
 			self.validarKillTeclas()
-			game.schedule(10000, { 	self.validarFuncion(teclaJugar)	} )
+			game.schedule(10000, { 	self.validarMostrar(teclaJugar)	} )
 		}
 	}
 	
@@ -256,9 +257,9 @@ object evento_inicioDelJuego inherits Opciones {
 		}
 	}
 	
-	method validarFuncion(tecla){
+	method validarMostrar(tecla){
 		if (not game.hasVisual(tecla)){
-				tecla.funcion()
+				tecla.mostrar()
 			}
 	}
 }
@@ -301,6 +302,22 @@ object evento_finDelJuego inherits Opciones {
 		}
 	}
 
+}
+
+object glosario inherits Opciones {
+	const property image = "glosario.jpg"
+	const property position = game.at(0,0)
+	
+	method mostrarOQuitar() {
+		if (not opcionesActivo) {
+			self.activarOpciones()
+			game.addVisual(self)
+		} else {
+			game.removeVisual(self)
+			self.desactivarOpciones()
+		}
+	}
+	
 }
 
 object imagenGanador {

@@ -20,9 +20,6 @@ object configurar {
 		const posBondi =[9,18,27]
 		const premioStandar = new Recompensa()
 		const castigoStandar = new Castigo()
-		const verde = new Semaforo(image="verde.png")
-		const rojo = new Semaforo(image="rojo.png")
-		const amarillo = new Semaforo(image="amarillo.png")
 		caminoDeJuego.construirse(listacasillas)
 		//Agregamos los eventos al tablero
 		caminoDeJuego.generarEventoEnCasillas(premioStandar, posPremios)
@@ -30,11 +27,6 @@ object configurar {
 		caminoDeJuego.generarEventoEnCasillas(evento_ppt, posPPT)
 		caminoDeJuego.generarEventoEnCasillas(evento_pyr, posPYR)
 		caminoDeJuego.generarEventoEnCasillas(evento_bondi, posBondi)
-		caminoDeJuego.colocarImagenesEnCasillas(verde, posPremios)
-		caminoDeJuego.colocarImagenesEnCasillas(rojo, posCastigos)
-		caminoDeJuego.colocarImagenesEnCasillas(amarillo, posPPT)
-		caminoDeJuego.colocarImagenesEnCasillas(amarillo, posPYR)
-		caminoDeJuego.colocarImagenesEnCasillas(amarillo, posBondi)
 	}
 
 	method board() {
@@ -69,10 +61,14 @@ object configurar {
 
 
 		//Fin Del Juego
-		keyboard.q().onPressDo( { evento_finDelJuego.salir()} )
+		keyboard.q().onPressDo( { evento_finDelJuego.salir()
+										})
 		keyboard.enter().onPressDo( { evento_finDelJuego.volverAjugar() 
 									   miniGameManager.enter()
 									   evento_inicioDelJuego.iniciar() } )
+									   
+		// Glosario
+		keyboard.g().onPressDo( { glosario.mostrarOQuitar()	} )
 	}
 
 }

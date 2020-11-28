@@ -8,7 +8,7 @@ En este juego, las estrellas participaran de una carrera por nuestra querida ave
 - **Moria "Si queres llorar, llora !" Casan**
 - **Susana "Pero vivooos???" Gimenez**
 
-Tenemos la participacion especial de **Guido "A ver la repe" Kaczka**, con sus relatos y comentarios a lo largo de la carrera.
+Tenemos la participacion especial de **Guido "A ver la repe" Kaczka**, con sus relatos y comentarios a lo largo de la carrera. Y también de **Silvio "El seductor del siglo" Soldán**, que comenta si ganaste, perdiste o empataste en un minijuego.
 
 ---
 
@@ -20,6 +20,8 @@ Pueden ingresar con la carrera ya comenzada e intentar ser el mejor, aunque haya
 Para avanzar, se debe presionar la tecla **T**, lanzando un dado que indicara las casillas que avanzara la estrella.
 
 A lo largo del juego, hay premios que ayudaran a la estrella a llegar mas rapido al final de la avenida. Pero tambien existen castigos que se opondran en el camino y que complicaran las cosas. Estos definen automaticamente cuantas casillas se avanzara o retrocedera.
+
+Para conocer qué significan estos eventos, podés apretar la tecla **G** para que aparezca en pantalla el **glosario**, el cual detallará el motivo de tu recompensa o castigo.
 
 ---
 

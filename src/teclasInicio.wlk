@@ -13,7 +13,7 @@ class Tecla {
 		image = self.nombre() + numeroDeImagenActual + ".png"
 	}
 	
-	method funcion() {
+	method mostrar() {
 		if (evento_inicioDelJuego.activo()) {
 			game.addVisual(self)
 			game.onTick(1000, "animacion", { self.cambiarImagen() })

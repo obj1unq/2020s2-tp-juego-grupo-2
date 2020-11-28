@@ -57,14 +57,6 @@ class Camino {
 	method generarEventoEnCasillas(evento, numerosCasillas){
 		numerosCasillas.forEach({casilla => self.poner_En(evento, casilla)})
 	}
-	
-	method colocarImagenesEnCasillas(imagen, numerosCasillas){
-		numerosCasillas.forEach({casilla => self.ponerImagen_En(new Semaforo(image=imagen.image()), casilla)})
-	}
-	
-	method ponerImagen_En(imagen, numCasilla){
-		game.addVisualIn(imagen, self.casillaNumero(numCasilla).position())
-	}
 }
 
 class Casilla {
