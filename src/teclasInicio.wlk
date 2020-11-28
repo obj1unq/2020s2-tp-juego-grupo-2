@@ -16,7 +16,7 @@ class Tecla {
 	method mostrar() {
 		if (evento_inicioDelJuego.activo()) {
 			game.addVisual(self)
-			game.onTick(1000, "animacion", { self.cambiarImagen() })
+			game.onTick(500, "animacion", { self.cambiarImagen() })
 		}
 	}
 	
