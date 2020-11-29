@@ -241,7 +241,7 @@ object evento_inicioDelJuego inherits Opciones {
 		if (opcionesActivo){
 			image = "placa_2.jpg"
 			self.validarKillTeclas()
-			game.schedule(10000, { 	self.validarMostrar(teclaJugar)	} )
+			game.schedule(15000, { 	self.validarMostrar(teclaJugar)	} )
 		}
 	}
 	
@@ -310,12 +310,18 @@ object glosario inherits Opciones {
 	
 	method mostrarOQuitar() {
 		if (not opcionesActivo) {
-			self.activarOpciones()
+			self.mostrar()
+		} else { self.quitar()	}
+	}
+	
+	method mostrar() {
+		self.activarOpciones()
 			game.addVisual(self)
-		} else {
-			game.removeVisual(self)
+	}
+	
+	method quitar() {
+		game.removeVisual(self)
 			self.desactivarOpciones()
-		}
 	}
 	
 }
