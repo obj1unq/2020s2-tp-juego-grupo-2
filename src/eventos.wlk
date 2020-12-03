@@ -54,6 +54,15 @@ object evento_pyr {
 	,preguntasFactory.nueva("p_io.png",  [false, false, true])
 	,preguntasFactory.nueva("p_ba.png",  [false, true, false])
 	,preguntasFactory.nueva("p_ri.png",  [true, false, false])
+	,preguntasFactory.nueva("p_di.png",  [false, true, false])
+	,preguntasFactory.nueva("p_va.png",  [false, false, true])
+	,preguntasFactory.nueva("p_cus.png",  [false, false, true])
+	,preguntasFactory.nueva("p_apo.png",  [true, false, false])
+	,preguntasFactory.nueva("p_pos.png",  [true, false, false])
+	,preguntasFactory.nueva("p_cot.png",  [false, true, false])
+	,preguntasFactory.nueva("p_jau.png",  [true, false, false])
+	,preguntasFactory.nueva("p_cen.png",  [false, false, true])
+	,preguntasFactory.nueva("p_tob.png",  [false, true, false])
 	]
 
 	var index = 0	
